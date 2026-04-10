@@ -1448,6 +1448,163 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);min-he
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const MUR=46.5;
+const AIRTABLE_BASE='appXMYtpXvdCLlqDR';
+const AIRTABLE_TOKEN='patguAJ518xnqXgl4.4e543b41561561d2b7c14a69e48e26fc9549e199bfef6d0381c28870592a97ed';
+
+// Global data store - populated from Airtable on load
+let P=[];
+let ARTS=[];
+let CITY_FLIGHTS={};
+
+async function fetchAirtable(table){
+  const url=`https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(table)}?maxRecords=500`;
+  const res=await fetch(url,{headers:{Authorization:`Bearer ${AIRTABLE_TOKEN}`}});
+  if(!res.ok)throw new Error(`Airtable error: ${res.status}`);
+  const data=await res.json();
+  return data.records.map(r=>({id:r.id,...r.fields}));
+}
+
+function showLoadingState(){
+  const rsec=document.getElementById('rsec');
+  if(rsec){
+    rsec.classList.add('vis');
+    document.getElementById('clist').innerHTML=`
+      <div style="text-align:center;padding:60px 20px;">
+        <div style="font-size:32px;margin-bottom:16px;">⏳</div>
+        <div style="font-family:'Syne',sans-serif;font-size:18px;color:var(--tx);margin-bottom:8px;">Loading programmes...</div>
+        <div style="font-size:13px;color:var(--mt);">Fetching live data from TNE Institute database</div>
+      </div>`;
+  }
+}
+
+function showErrorState(msg){
+  const rsec=document.getElementById('rsec');
+  if(rsec){
+    rsec.classList.add('vis');
+    document.getElementById('clist').innerHTML=`
+      <div style="text-align:center;padding:60px 20px;">
+        <div style="font-size:32px;margin-bottom:16px;">⚠️</div>
+        <div style="font-family:'Syne',sans-serif;font-size:18px;color:var(--tx);margin-bottom:8px;">Could not load data</div>
+        <div style="font-size:13px;color:var(--mt);">${msg}</div>
+        <button onclick="initData()" style="margin-top:16px;padding:8px 20px;background:var(--ac);border:none;border-radius:var(--rs);color:#06080f;font-size:13px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">Try again</button>
+      </div>`;
+  }
+}
+
+async function initData(){
+  showLoadingState();
+  try{
+    // Fetch all tables in parallel
+    const [uniRecs, progRecs, artRecs, cityRecs]=await Promise.all([
+      fetchAirtable('Universities'),
+      fetchAirtable('Programmes'),
+      fetchAirtable('Articulation'),
+      fetchAirtable('Cities')
+    ]);
+
+    // Build university lookup by name
+    const uniMap={};
+    uniRecs.forEach(u=>{uniMap[u.Name]=u;});
+
+    // Map programmes to site format
+    P=progRecs.map((r,i)=>{
+      const uni=uniMap[r.University]||{};
+      return{
+        id:i+1,
+        uni:r.University||'',
+        pg:r['Programme Name']||'',
+        disc:r.Discipline||'',
+        lev:r.Level||'UG',
+        dy:parseInt(r['Duration Years'])||3,
+        lang:r.Language||'English',
+        type:r['Campus Type']||uni['Campus Type']||'Home',
+        co:r.Country||uni.Country||'',
+        fl:flagFor(r.Country||uni.Country||''),
+        lo:uni['Logo Initial']||r.University?.[0]||'U',
+        lc:uni['Logo Colour']||'#003366',
+        lb:hexToRgba(uni['Logo Colour']||'#003366',0.15),
+        qw:parseInt(uni['QS World Rank'])||null,
+        qs:parseInt(r['QS Subject Rank'])||null,
+        fee:parseInt(r['Tuition Fee USD'])||0,
+        liv:parseInt(r['Living Cost USD'])||0,
+        vis:parseInt(r['Visa Cost USD'])||0,
+        saf:r['Safety Rating']||'green',
+        sc:parseInt(r['Crime Score'])||75,
+        ss:parseInt(r['Stability Score'])||75,
+        sh:parseInt(r['Health Score'])||75,
+        al:r['A-Level Requirement']||'',
+        ib:parseInt(r['IB Points'])||null,
+        ielts:parseFloat(r['IELTS Requirement'])||null,
+        path:r['Pathway Available']===true||r['Pathway Available']==='TRUE'||r['Pathway Available']===1,
+        del:r.Delivery||'Full-time',
+        tneRating:r['TNE Rating']||null,
+        note:r.Notes||''
+      };
+    });
+
+    // Map articulation agreements
+    ARTS=artRecs.map((r,i)=>({
+      id:i+1,
+      localUni:r['Local University']||'',
+      localCountry:r['Local Country']||'',
+      localLoc:`${r['Local University']||''}, ${r['Local Country']||''}`,
+      foreignUni:r['Foreign University']||'',
+      foreignCountry:r['Foreign Country']||'',
+      foreignLoc:`${r['Foreign University']||''}, ${r['Foreign Country']||''}`,
+      foreignQS:parseInt(r['Foreign QS Rank'])||null,
+      disc:r.Discipline||'',
+      progs:[r.Discipline||''],
+      transferYears:(r['Transfer Years']||'2').split(',').map(y=>parseInt(y.trim())).filter(Boolean),
+      award:r['Award Type']||'foreign only',
+      localFeePerYr:parseInt(r['Local Fee Per Year USD'])||0,
+      foreignFeePerYr:parseInt(r['Foreign Fee Per Year USD'])||0,
+      totalYrs:parseInt(r['Total Years'])||4,
+      note:r.Notes||''
+    }));
+
+    // Build city flights lookup
+    CITY_FLIGHTS={};
+    cityRecs.forEach(r=>{
+      const city=r.City;
+      if(!city)return;
+      CITY_FLIGHTS[city]={
+        UK:parseFloat(r['UK Hours'])||null,
+        France:parseFloat(r['France Hours'])||null,
+        UAE:parseFloat(r['UAE Hours'])||null,
+        SouthAfrica:parseFloat(r['South Africa Hours'])||null,
+        Rwanda:parseFloat(r['Rwanda Hours'])||null,
+        Australia:parseFloat(r['Australia Hours'])||null,
+        Canada:parseFloat(r['Canada Hours'])||null,
+        USA:parseFloat(r['USA Hours'])||null,
+        Malaysia:parseFloat(r['Malaysia Hours'])||null
+      };
+    });
+
+    // Update stats in hero
+    const statEls=document.querySelectorAll('.hstat strong');
+    if(statEls[0])statEls[0].textContent=P.length+'+';
+
+    // Run initial search now data is loaded
+    updateCountry();
+    doSearch();
+
+  }catch(err){
+    console.error('Airtable load error:',err);
+    showErrorState('Please check your connection and try again. Error: '+err.message);
+  }
+}
+
+function flagFor(country){
+  const flags={'United Kingdom':'🇬🇧','USA':'🇺🇸','Canada':'🇨🇦','Australia':'🇦🇺','UAE':'🇦🇪','France':'🇫🇷','Germany':'🇩🇪','Netherlands':'🇳🇱','Malaysia':'🇲🇾','Singapore':'🇸🇬','Rwanda':'🇷🇼','South Africa':'🇿🇦','Kenya':'🇰🇪','Nigeria':'🇳🇬','Ghana':'🇬🇭','Mauritius':'🇲🇺','Online':'🌐','China':'🇨🇳','India':'🇮🇳','Japan':'🇯🇵'};
+  return flags[country]||'🌍';
+}
+
+function hexToRgba(hex,alpha){
+  const r=parseInt(hex.slice(1,3),16);
+  const g=parseInt(hex.slice(3,5),16);
+  const b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
 
 // Region → country map (simplified)
 const RC={
@@ -1473,24 +1630,7 @@ const CO2REG={
 const QF2CO={"uk":"United Kingdom","us":"USA","ca":"Canada","au":"Australia","ae":"UAE"};
 
 // City → flight times to destination countries (hours)
-const CITY_FLIGHTS={
-  "Port Louis":{UK:12,France:11,UAE:6,SouthAfrica:4,Rwanda:5,Australia:14,Canada:18,USA:20,Malaysia:12,Netherlands:12},
-  "Lagos":{UK:6,France:6,UAE:6,SouthAfrica:5,Rwanda:5,Australia:18,Canada:14,USA:12,Malaysia:15,Netherlands:6},
-  "Abuja":{UK:7,France:7,UAE:7,SouthAfrica:6,Rwanda:5,Australia:19,Canada:15,USA:13,Malaysia:15,Netherlands:7},
-  "Kano":{UK:7,France:7,UAE:7,SouthAfrica:7,Rwanda:6,Australia:20,Canada:16,USA:14,Malaysia:16,Netherlands:7},
-  "Port Harcourt":{UK:7,France:7,UAE:7,SouthAfrica:6,Rwanda:5,Australia:18,Canada:15,USA:12,Malaysia:15,Netherlands:7},
-  "Enugu":{UK:7,France:7,UAE:7,SouthAfrica:6,Rwanda:5,Australia:18,Canada:15,USA:13,Malaysia:15,Netherlands:7},
-  "Nairobi":{UK:9,France:10,UAE:5,SouthAfrica:4,Rwanda:1.5,Australia:13,Canada:16,USA:17,Malaysia:10,Netherlands:9},
-  "Mombasa":{UK:10,France:10,UAE:5,SouthAfrica:4,Rwanda:2,Australia:14,Canada:17,USA:17,Malaysia:11,Netherlands:10},
-  "Kisumu":{UK:10,France:11,UAE:6,SouthAfrica:5,Rwanda:2,Australia:14,Canada:17,USA:18,Malaysia:11,Netherlands:10},
-  "Accra":{UK:7,France:6,UAE:8,SouthAfrica:8,Rwanda:6,Australia:19,Canada:14,USA:10,Malaysia:16,Netherlands:6},
-  "Kumasi":{UK:7,France:7,UAE:8,SouthAfrica:8,Rwanda:6,Australia:19,Canada:14,USA:10,Malaysia:16,Netherlands:7},
-  "Tamale":{UK:8,France:8,UAE:9,SouthAfrica:9,Rwanda:7,Australia:20,Canada:15,USA:11,Malaysia:17,Netherlands:8},
-  "Johannesburg":{UK:11,France:11,UAE:8,SouthAfrica:0,Rwanda:6,Australia:12,Canada:18,USA:16,Malaysia:12,Netherlands:11},
-  "Cape Town":{UK:12,France:12,UAE:9,SouthAfrica:0,Rwanda:7,Australia:13,Canada:19,USA:17,Malaysia:13,Netherlands:12},
-  "Durban":{UK:12,France:12,UAE:9,SouthAfrica:0,Rwanda:6,Australia:13,Canada:19,USA:17,Malaysia:13,Netherlands:12},
-  "Pretoria":{UK:11,France:11,UAE:8,SouthAfrica:0,Rwanda:6,Australia:12,Canada:18,USA:16,Malaysia:12,Netherlands:11}
-};
+// City flights loaded from Airtable - see initData()
 
 // Country → flight key for lookup
 const CO2FLTKEY={
@@ -1513,48 +1653,10 @@ function getFlightTime(city, country){
 }
 
 // PROGRAMMES
-const P=[
-{id:1,uni:"University of Birmingham",pg:"MBA / MSc Management",disc:"Business",lev:"PGT",dy:1,lang:"English",type:"Home",co:"United Kingdom",fl:"🇬🇧",lo:"B",lc:"#003366",lb:"rgba(0,51,102,0.15)",qw:101,qs:51,fee:28000,liv:14000,vis:490,saf:"green",sc:78,ss:88,sh:85,al:"ABB",ib:34,ielts:6.5,path:true,del:"Full-time",note:"Russell Group. Strong global business network."},
-{id:2,uni:"University of Birmingham Dubai",pg:"MBA / MSc Management",disc:"Business",lev:"PGT",dy:1,lang:"English",type:"TNE",co:"UAE",fl:"🇦🇪",lo:"B",lc:"#003366",lb:"rgba(0,51,102,0.15)",qw:101,qs:51,fee:19500,liv:18000,vis:300,saf:"green",sc:82,ss:85,sh:88,al:"ABB",ib:34,ielts:6.5,path:false,del:"Full-time",note:"Same UK degree, Dubai delivery. Ideal for African & island students."},
-{id:3,uni:"Université Paris-Dauphine",pg:"Master en Management",disc:"Business",lev:"PGT",dy:2,lang:"French",type:"Home",co:"France",fl:"🇫🇷",lo:"P",lc:"#003087",lb:"rgba(0,48,135,0.15)",qw:290,qs:101,fee:4800,liv:16000,vis:100,saf:"green",sc:65,ss:80,sh:88,al:"BBB",ib:32,ielts:null,path:true,del:"Full-time",note:"Top French grande école. Taught entirely in French."},
-{id:4,uni:"Heriot-Watt University Dubai",pg:"MSc International Business",disc:"Business",lev:"PGT",dy:1,lang:"English",type:"TNE",co:"UAE",fl:"🇦🇪",lo:"H",lc:"#006938",lb:"rgba(0,105,56,0.15)",qw:350,qs:201,fee:13500,liv:18000,vis:300,saf:"green",sc:82,ss:85,sh:88,al:"BCC",ib:30,ielts:6.0,path:true,del:"Full-time",note:"UK degree, Dubai campus. Affordable and well-established TNE."},
-{id:5,uni:"University of Cape Town",pg:"MBA",disc:"Business",lev:"PGT",dy:2,lang:"English",type:"Home",co:"South Africa",fl:"🇿🇦",lo:"C",lc:"#003B5C",lb:"rgba(0,59,92,0.15)",qw:233,qs:101,fee:16000,liv:7500,vis:50,saf:"amber",sc:42,ss:70,sh:72,al:"ABB",ib:33,ielts:6.5,path:false,del:"Full-time",note:"#1 in Africa. Strong regional alumni network."},
-{id:6,uni:"University of London Worldwide",pg:"BSc Business & Management",disc:"Business",lev:"UG",dy:3,lang:"English",type:"Online",co:"Online",fl:"🌐",lo:"L",lc:"#8B0000",lb:"rgba(139,0,0,0.12)",qw:350,qs:151,fee:7200,liv:0,vis:0,saf:"green",sc:95,ss:95,sh:95,al:"CCC",ib:28,ielts:6.0,path:true,del:"Online",note:"UK degree. Study from anywhere , no relocation required."},
-{id:7,uni:"University of Glasgow",pg:"BSc Accountancy",disc:"Accountancy",lev:"UG",dy:4,lang:"English",type:"Home",co:"United Kingdom",fl:"🇬🇧",lo:"G",lc:"#003865",lb:"rgba(0,56,101,0.15)",qw:76,qs:40,fee:26000,liv:12000,vis:490,saf:"green",sc:76,ss:88,sh:85,al:"ABB",ib:34,ielts:6.5,path:true,del:"Full-time",note:"Russell Group. ICAS/ICAEW accredited. Strong graduate employability."},
-{id:8,uni:"Heriot-Watt Malaysia",pg:"BSc Accountancy & Finance",disc:"Accountancy",lev:"UG",dy:4,lang:"English",type:"TNE",co:"Malaysia",fl:"🇲🇾",lo:"H",lc:"#006938",lb:"rgba(0,105,56,0.15)",qw:350,qs:150,fee:9000,liv:6000,vis:80,saf:"green",sc:74,ss:80,sh:78,al:"BCC",ib:28,ielts:6.0,path:true,del:"Full-time",note:"UK degree, Malaysia delivery. ACCA accredited. Excellent value."},
-{id:9,uni:"University of Toronto",pg:"BCom Accounting",disc:"Accountancy",lev:"UG",dy:4,lang:"English",type:"Home",co:"Canada",fl:"🇨🇦",lo:"T",lc:"#00204E",lb:"rgba(0,32,78,0.15)",qw:21,qs:20,fee:38000,liv:14000,vis:150,saf:"green",sc:80,ss:90,sh:88,al:"AAA",ib:37,ielts:6.5,path:true,del:"Full-time",note:"World Top 25. CPA Canada pathway. Strong placement record."},
-{id:10,uni:"ACCA Online",pg:"ACCA Professional Qualification",disc:"Accountancy",lev:"PGT",dy:2,lang:"English",type:"Online",co:"Online",fl:"🌐",lo:"A",lc:"#7B2D8B",lb:"rgba(123,45,139,0.12)",qw:null,qs:null,fee:3500,liv:0,vis:0,saf:"green",sc:95,ss:95,sh:95,al:"CCC",ib:24,ielts:6.0,path:true,del:"Online",note:"Global gold standard in accountancy. Recognised in 180+ countries."},
-{id:11,uni:"Imperial College London",pg:"MEng Engineering",disc:"Engineering",lev:"UG",dy:4,lang:"English",type:"Home",co:"United Kingdom",fl:"🇬🇧",lo:"I",lc:"#003E74",lb:"rgba(0,62,116,0.15)",qw:6,qs:3,fee:41000,liv:18000,vis:490,saf:"green",sc:72,ss:88,sh:85,al:"A*AA",ib:39,ielts:7.0,path:false,del:"Full-time",note:"World Top 10. No pathway. Exceptional career outcomes."},
-{id:12,uni:"University of Melbourne",pg:"Master of Engineering",disc:"Engineering",lev:"PGT",dy:2,lang:"English",type:"Home",co:"Australia",fl:"🇦🇺",lo:"M",lc:"#003087",lb:"rgba(0,48,135,0.15)",qw:14,qs:8,fee:36000,liv:18000,vis:630,saf:"green",sc:74,ss:88,sh:86,al:"AAA",ib:38,ielts:6.5,path:false,del:"Full-time",note:"World Top 15. Engineers Australia accredited. Strong industry links."},
-{id:13,uni:"Manipal University Dubai",pg:"BEng Mechanical Engineering",disc:"Engineering",lev:"UG",dy:4,lang:"English",type:"TNE",co:"UAE",fl:"🇦🇪",lo:"M",lc:"#C83329",lb:"rgba(200,51,41,0.12)",qw:751,qs:401,fee:9500,liv:18000,vis:300,saf:"green",sc:82,ss:85,sh:88,al:"BCC",ib:29,ielts:6.0,path:true,del:"Full-time",note:"Indian accredited degree, Dubai campus. Lower tuition entry point."},
-{id:14,uni:"University of Johannesburg",pg:"BEng Electrical Engineering",disc:"Engineering",lev:"UG",dy:4,lang:"English",type:"Home",co:"South Africa",fl:"🇿🇦",lo:"J",lc:"#006DB7",lb:"rgba(0,109,183,0.12)",qw:501,qs:301,fee:4800,liv:6500,vis:50,saf:"amber",sc:40,ss:65,sh:68,al:"BCC",ib:29,ielts:6.0,path:true,del:"Full-time",note:"Very affordable. Strong African engineering network."},
-{id:15,uni:"University of Edinburgh",pg:"BSc Computer Science",disc:"Computer Science",lev:"UG",dy:4,lang:"English",type:"Home",co:"United Kingdom",fl:"🇬🇧",lo:"E",lc:"#00325F",lb:"rgba(0,50,95,0.15)",qw:22,qs:14,fee:30000,liv:13500,vis:490,saf:"green",sc:78,ss:88,sh:86,al:"AAA",ib:37,ielts:6.5,path:false,del:"Full-time",note:"World Top 25 CS. Strong AI & ML research hub."},
-{id:16,uni:"Carnegie Mellon Africa",pg:"MSc Information Technology",disc:"Computer Science",lev:"PGT",dy:2,lang:"English",type:"TNE",co:"Rwanda",fl:"🇷🇼",lo:"C",lc:"#C41230",lb:"rgba(196,18,48,0.12)",qw:53,qs:11,fee:28000,liv:7000,vis:60,saf:"green",sc:80,ss:82,sh:70,al:"AAB",ib:35,ielts:7.0,path:false,del:"Full-time",note:"CMU degree on the African continent. World Top 5 CS programme."},
-{id:17,uni:"University of Wollongong Dubai",pg:"BSc Computer Science",disc:"Computer Science",lev:"UG",dy:3,lang:"English",type:"TNE",co:"UAE",fl:"🇦🇪",lo:"W",lc:"#003DA5",lb:"rgba(0,61,165,0.12)",qw:650,qs:351,fee:10500,liv:18000,vis:300,saf:"green",sc:82,ss:85,sh:88,al:"BCC",ib:28,ielts:6.0,path:true,del:"Full-time",note:"Australian accredited degree, Dubai delivery. Established 1993."},
-{id:18,uni:"University of the People",pg:"BSc Computer Science",disc:"Computer Science",lev:"UG",dy:4,lang:"English",type:"Online",co:"Online",fl:"🌐",lo:"U",lc:"#2D6A4F",lb:"rgba(45,106,79,0.12)",qw:null,qs:null,fee:2400,liv:0,vis:0,saf:"green",sc:95,ss:95,sh:95,al:"CCC",ib:26,ielts:5.5,path:true,del:"Online",note:"US accredited. Lowest-cost global CS degree option."},
-{id:19,uni:"University of London (Laws)",pg:"LLB Law",disc:"Law",lev:"UG",dy:3,lang:"English",type:"Online",co:"Online",fl:"🌐",lo:"L",lc:"#8B0000",lb:"rgba(139,0,0,0.12)",qw:350,qs:80,fee:8500,liv:0,vis:0,saf:"green",sc:95,ss:95,sh:95,al:"BBB",ib:30,ielts:6.5,path:true,del:"Online",note:"The oldest external law programme in the world. Globally recognised LLB."},
-{id:20,uni:"University of Melbourne",pg:"JD Juris Doctor",disc:"Law",lev:"PGT",dy:3,lang:"English",type:"Home",co:"Australia",fl:"🇦🇺",lo:"M",lc:"#003087",lb:"rgba(0,48,135,0.15)",qw:14,qs:5,fee:42000,liv:18000,vis:630,saf:"green",sc:74,ss:88,sh:86,al:"AAA",ib:40,ielts:7.0,path:false,del:"Full-time",note:"World Top 5 Law. Leading Australasian JD programme."},
-{id:21,uni:"University of Ottawa",pg:"LLB / JD Law",disc:"Law",lev:"UG",dy:3,lang:"English",type:"Home",co:"Canada",fl:"🇨🇦",lo:"O",lc:"#8B0000",lb:"rgba(139,0,0,0.12)",qw:301,qs:90,fee:22000,liv:12000,vis:150,saf:"green",sc:80,ss:90,sh:88,al:"AAB",ib:35,ielts:7.0,path:false,del:"Full-time",note:"Canada's bilingual law school. Common law + civil law streams."},
-{id:22,uni:"University of Cape Town",pg:"MBChB Medicine",disc:"Medicine",lev:"UG",dy:6,lang:"English",type:"Home",co:"South Africa",fl:"🇿🇦",lo:"C",lc:"#003B5C",lb:"rgba(0,59,92,0.15)",qw:233,qs:51,fee:12000,liv:7500,vis:50,saf:"amber",sc:42,ss:70,sh:72,al:"A*AA",ib:38,ielts:7.0,path:false,del:"Full-time",note:"#1 medical school in Africa. Globally respected MBChB."},
-{id:23,uni:"University of Manchester",pg:"MBChB Medicine",disc:"Medicine",lev:"UG",dy:5,lang:"English",type:"Home",co:"United Kingdom",fl:"🇬🇧",lo:"M",lc:"#660099",lb:"rgba(102,0,153,0.12)",qw:32,qs:22,fee:38000,liv:13000,vis:490,saf:"green",sc:68,ss:85,sh:83,al:"A*AA",ib:38,ielts:7.0,path:false,del:"Full-time",note:"Russell Group. One of UK's largest medical schools."},
-{id:24,uni:"London School of Economics",pg:"BSc Economics",disc:"Economics",lev:"UG",dy:3,lang:"English",type:"Home",co:"United Kingdom",fl:"🇬🇧",lo:"L",lc:"#8B0000",lb:"rgba(139,0,0,0.12)",qw:45,qs:2,fee:29000,liv:18000,vis:490,saf:"green",sc:72,ss:88,sh:85,al:"A*AA",ib:38,ielts:7.0,path:false,del:"Full-time",note:"World #2 Economics. The gold standard for economics graduates."},
-{id:25,uni:"University of Toronto",pg:"BA Economics",disc:"Economics",lev:"UG",dy:4,lang:"English",type:"Home",co:"Canada",fl:"🇨🇦",lo:"T",lc:"#00204E",lb:"rgba(0,32,78,0.15)",qw:21,qs:12,fee:36000,liv:14000,vis:150,saf:"green",sc:80,ss:90,sh:88,al:"AAA",ib:37,ielts:6.5,path:true,del:"Full-time",note:"World Top 25. Strong policy and finance pathways."},
-{id:26,uni:"University of Mauritius",pg:"BSc Computer Science",disc:"Computer Science",lev:"UG",dy:3,lang:"English",type:"Home",co:"Mauritius",fl:"🇲🇺",lo:"U",lc:"#003580",lb:"rgba(0,53,128,0.12)",qw:null,qs:null,fee:2200,liv:4000,vis:0,saf:"green",sc:78,ss:85,sh:80,al:"BCC",ib:28,ielts:null,path:true,del:"Full-time",note:"Study at home. Solid regional reputation. Lowest total cost."},
-];
+// Programmes loaded from Airtable - see initData()
 
 // ARTICULATION DATA
-const ARTS=[
-{id:1,localUni:"University of Nairobi",localCountry:"Kenya",localLoc:"Nairobi, Kenya 🇰🇪",foreignUni:"University of Glasgow",foreignCountry:"United Kingdom",foreignLoc:"Glasgow, UK 🇬🇧",foreignQS:76,disc:"Engineering",progs:["BEng Electrical Engineering","BEng Civil Engineering","BEng Mechanical Engineering"],transferYears:[2,3],award:"both",localFeePerYr:3500,foreignFeePerYr:26000,totalYrs:4,note:"2+2 agreement. Complete 2 years in Nairobi, finish 2 at Glasgow. Both certificates awarded on completion."},
-{id:2,localUni:"University of Ghana",localCountry:"Ghana",localLoc:"Accra, Ghana 🇬🇭",foreignUni:"University of Birmingham",foreignCountry:"United Kingdom",foreignLoc:"Birmingham, UK 🇬🇧",foreignQS:101,disc:"Business",progs:["BSc Business Management","BSc Accounting & Finance"],transferYears:[2],award:"foreign",localFeePerYr:2800,foreignFeePerYr:22000,totalYrs:4,note:"2+2 pathway. 2 years Accra, 2 years Birmingham. Birmingham degree awarded."},
-{id:3,localUni:"Strathmore University",localCountry:"Kenya",localLoc:"Nairobi, Kenya 🇰🇪",foreignUni:"Heriot-Watt University",foreignCountry:"United Kingdom",foreignLoc:"Edinburgh, UK 🇬🇧",foreignQS:350,disc:"Business",progs:["BSc Business Administration","BSc Accountancy"],transferYears:[1,2],award:"both",localFeePerYr:4200,foreignFeePerYr:13500,totalYrs:4,note:"1+3 or 2+2 pathway. Dubai campus option available for final years , further saving possible."},
-{id:4,localUni:"University of Mauritius",localCountry:"Mauritius",localLoc:"Port Louis, Mauritius 🇲🇺",foreignUni:"University of Nottingham",foreignCountry:"United Kingdom",foreignLoc:"Nottingham, UK 🇬🇧",foreignQS:103,disc:"Engineering",progs:["BEng Electronic Engineering","BEng Mechanical Engineering"],transferYears:[1,2],award:"foreign",localFeePerYr:2200,foreignFeePerYr:24000,totalYrs:4,note:"1+3 or 2+2 agreement. Start in Port Louis, complete at Nottingham. Nottingham degree awarded."},
-{id:5,localUni:"University of Lagos",localCountry:"Nigeria",localLoc:"Lagos, Nigeria 🇳🇬",foreignUni:"University of Strathclyde",foreignCountry:"United Kingdom",foreignLoc:"Glasgow, UK 🇬🇧",foreignQS:302,disc:"Engineering",progs:["BEng Chemical Engineering","BEng Mechanical Engineering"],transferYears:[2],award:"foreign",localFeePerYr:1800,foreignFeePerYr:21000,totalYrs:4,note:"2+2 agreement. Strong engineering partnership. Strathclyde degree awarded."},
-{id:6,localUni:"Ashesi University",localCountry:"Ghana",localLoc:"Accra, Ghana 🇬🇭",foreignUni:"Worcester Polytechnic Institute",foreignCountry:"USA",foreignLoc:"Massachusetts, USA 🇺🇸",foreignQS:401,disc:"Computer Science",progs:["BSc Computer Science","BSc Engineering"],transferYears:[2,3],award:"both",localFeePerYr:8500,foreignFeePerYr:32000,totalYrs:4,note:"Flagship US-Ghana dual degree. Both institutions award. Highly competitive entry."},
-{id:7,localUni:"University of Mauritius",localCountry:"Mauritius",localLoc:"Port Louis, Mauritius 🇲🇺",foreignUni:"Curtin University",foreignCountry:"Australia",foreignLoc:"Perth, Australia 🇦🇺",foreignQS:427,disc:"Business",progs:["BCom Business","BCom Marketing","BCom Human Resources"],transferYears:[2],award:"foreign",localFeePerYr:2200,foreignFeePerYr:11000,totalYrs:4,note:"2+2 agreement. Final years can be completed at Curtin Dubai campus , significant additional saving."},
-{id:8,localUni:"University of Cape Town",localCountry:"South Africa",localLoc:"Cape Town, South Africa 🇿🇦",foreignUni:"Sciences Po",foreignCountry:"France",foreignLoc:"Paris, France 🇫🇷",foreignQS:290,disc:"Economics",progs:["BA Economics","BA Political Economy"],transferYears:[3],award:"both",localFeePerYr:5000,foreignFeePerYr:12000,totalYrs:5,note:"3+2 double degree. French proficiency required. Both degrees awarded on completion."},
-{id:9,localUni:"Obafemi Awolowo University",localCountry:"Nigeria",localLoc:"Ile-Ife, Nigeria 🇳🇬",foreignUni:"University of Aberdeen",foreignCountry:"United Kingdom",foreignLoc:"Aberdeen, UK 🇬🇧",foreignQS:251,disc:"Engineering",progs:["BEng Petroleum Engineering","BEng Chemical Engineering"],transferYears:[2],award:"foreign",localFeePerYr:1500,foreignFeePerYr:22000,totalYrs:4,note:"2+2 agreement. Strong energy sector focus. Highly relevant for Nigerian oil & gas careers."},
-{id:10,localUni:"Makerere University",localCountry:"Uganda",localLoc:"Kampala, Uganda 🇺🇬",foreignUni:"University of Manchester",foreignCountry:"United Kingdom",foreignLoc:"Manchester, UK 🇬🇧",foreignQS:32,disc:"Medicine",progs:["MBChB Medicine","BSc Public Health"],transferYears:[3],award:"foreign",localFeePerYr:2800,foreignFeePerYr:38000,totalYrs:5,note:"3+2 medical pathway. First 3 years clinical training in Kampala, final 2 at Manchester. Manchester MBChB awarded."},
-];
+// Articulation loaded from Airtable - see initData()
 
 let artDisc="all",artYr="all";
 
@@ -1948,7 +2050,7 @@ function submitForm(){
 
 function toast2(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3500);}
 
-window.addEventListener("load",()=>{updateCountry();doSearch();});
+window.addEventListener("load",()=>{initData();});
 </script>
 </body>
 </html>
