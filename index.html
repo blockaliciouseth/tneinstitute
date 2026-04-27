@@ -36,7 +36,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);min-he
 .tne-logo-text{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#1a1d2e;letter-spacing:-0.01em;}
 .tne-logo-text span{color:var(--ac);}
 .nav-dropdown{position:relative;display:inline-block;}
-.nav-drop-menu{position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid var(--bd);border-radius:10px;min-width:180px;padding:6px;z-index:200;display:none;box-shadow:0 8px 32px rgba(0,0,0,0.12);}
+.nav-drop-menu{position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--bd);border-radius:10px;min-width:180px;padding:10px 6px 6px;z-index:200;display:none;box-shadow:0 8px 32px rgba(0,0,0,0.12);}
 .nav-dropdown:hover .nav-drop-menu{display:block;}
 .nav-drop-menu button{display:block;width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:var(--mt2);font-size:13px;font-family:"Outfit",sans-serif;cursor:pointer;border-radius:7px;transition:all 0.15s;font-weight:500;}
 .nav-drop-menu button:hover{background:var(--acg);color:var(--ac);}
@@ -439,7 +439,13 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
   <div class="nav-links">
     <button class="nl active" id="nl-search" onclick="showPage('search')">Search</button>
     <button class="nl" id="nl-articulation" onclick="showPage('articulation')">Articulation</button>
-    <button class="nl" id="nl-focus" onclick="showPage('focus')">In Focus</button>
+    <div class="nav-dropdown" id="dd-focus">
+      <button class="nl" id="nl-focus" onclick="showPage('focus')">In Focus ▾</button>
+      <div class="nav-drop-menu" id="dm-focus">
+        <button onclick="showPage('focus')">In Focus — Overview</button>
+        <button onclick="showPage('india')">🇮🇳 UK Campuses in India</button>
+      </div>
+    </div>
     <button class="nl" id="nl-tne" onclick="showPage('tne')">What is TNE?</button>
     <div class="nav-dropdown" id="dd-about">
       <button class="nl" id="nl-about" onclick="showPage('about')">About ▾</button>
@@ -471,7 +477,7 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
 <!-- HERO - compact -->
 <div class="hbg">
 <div class="hc" style="padding:28px 20px 24px;">
-  <div class="hbadge">✦ Top 500 Universities · Best value courses · Closer to home</div>
+  <div class="hbadge">✦ Top 1000 Universities · Best value courses · Closer to home</div>
   <h1 class="htitle" style="font-size:clamp(24px,3.5vw,44px);">Find the best and most affordable<br><span class="grad">university education.</span></h1>
   <p class="hsub" style="font-size:14px;margin-bottom:16px;">The smartest way to find world-class education. Compare elite university campuses by cost, ranking and proximity to home, including overseas options most students never discover.</p>
 
@@ -527,10 +533,11 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
 
       <label class="fl">QS World Rank</label>
       <select class="fsel" id="s-rank" onchange="doSearch()">
-        <option value="">Any (Top 500)</option>
+        <option value="">Any ranking</option>
         <option value="1-100">Top 100</option>
         <option value="101-250">101–250</option>
         <option value="251-500">251–500</option>
+        <option value="501-1000">501–1000</option>
       </select>
 
       <label class="fl">Language</label>
@@ -753,7 +760,211 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
     </div>
   </div>
 
-  <div id="art-list"></div>
+  
+  <!-- ARTICULATION AGREEMENTS DATA -->
+  <!-- Note: All agreements below are verified from official university sources -->
+  <div id="art-list">
+    <!-- Loaded dynamically from Airtable or shown as static examples below -->
+  </div>
+
+  <!-- STATIC VERIFIED EXAMPLES for launch -->
+  <div style="margin-bottom:24px;">
+
+    <!-- Lancaster + Ghana articulation -->
+    <div class="art-card">
+      <div class="art-hdr">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#B5121B;">Lancaster University Ghana</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Accra, Ghana</div>
+        </div>
+        <div style="text-align:center;padding:0 16px;">
+          <div style="font-size:22px;color:var(--ac)">→</div>
+          <div style="font-size:11px;font-weight:600;color:#4b5563;">2+1 or 3+0</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#B5121B;">Lancaster University UK</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Lancaster, UK · QS #209</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+        <div class="art-cell"><div class="art-cell-label">Disciplines</div><div class="art-cell-val">Business, Law, Computer Science, Engineering</div></div>
+        <div class="art-cell"><div class="art-cell-label">Transfer year</div><div class="art-cell-val">Year 2 or 3</div></div>
+        <div class="art-cell"><div class="art-cell-label">Award</div><div class="art-cell-val">Lancaster University UK degree</div></div>
+        <div class="art-cell" style="border-right:none;"><div class="art-cell-label">Local fee/yr</div><div class="art-cell-val">~$6,500</div></div>
+      </div>
+    </div>
+
+    <!-- Lancaster Malaysia articulation -->
+    <div class="art-card">
+      <div class="art-hdr">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#B5121B;">Lancaster University Malaysia</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Iskandar Puteri, Malaysia</div>
+        </div>
+        <div style="text-align:center;padding:0 16px;">
+          <div style="font-size:22px;color:var(--ac)">→</div>
+          <div style="font-size:11px;font-weight:600;color:#4b5563;">1+2 or full 3 yrs</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#B5121B;">Lancaster University UK</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Lancaster, UK · QS #209</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+        <div class="art-cell"><div class="art-cell-label">Disciplines</div><div class="art-cell-val">Business, Engineering, Science, Management</div></div>
+        <div class="art-cell"><div class="art-cell-label">Transfer year</div><div class="art-cell-val">Year 2 or Year 3</div></div>
+        <div class="art-cell"><div class="art-cell-label">Award</div><div class="art-cell-val">Lancaster University degree</div></div>
+        <div class="art-cell" style="border-right:none;"><div class="art-cell-label">Local fee/yr</div><div class="art-cell-val">~$9,000</div></div>
+      </div>
+    </div>
+
+    <!-- Heriot-Watt Dubai to Edinburgh/Malaysia -->
+    <div class="art-card">
+      <div class="art-hdr">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#006938;">Heriot-Watt University Dubai</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Dubai Knowledge Park, UAE</div>
+        </div>
+        <div style="text-align:center;padding:0 16px;">
+          <div style="font-size:22px;color:var(--ac)">⇄</div>
+          <div style="font-size:11px;font-weight:600;color:#4b5563;">Inter-campus transfer</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#006938;">Heriot-Watt Edinburgh or Malaysia</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Edinburgh, UK / Putrajaya, Malaysia · QS #287</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+        <div class="art-cell"><div class="art-cell-label">Disciplines</div><div class="art-cell-val">Engineering, Business, Computing, Architecture, Psychology</div></div>
+        <div class="art-cell"><div class="art-cell-label">Transfer</div><div class="art-cell-val">Any year (Go Global programme)</div></div>
+        <div class="art-cell"><div class="art-cell-label">Award</div><div class="art-cell-val">Heriot-Watt University degree</div></div>
+        <div class="art-cell" style="border-right:none;"><div class="art-cell-label">Dubai fee/yr</div><div class="art-cell-val">~$16,000</div></div>
+      </div>
+    </div>
+
+    <!-- Heriot-Watt Malaysia to Edinburgh/Dubai -->
+    <div class="art-card">
+      <div class="art-hdr">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#006938;">Heriot-Watt University Malaysia</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Putrajaya, Malaysia</div>
+        </div>
+        <div style="text-align:center;padding:0 16px;">
+          <div style="font-size:22px;color:var(--ac)">⇄</div>
+          <div style="font-size:11px;font-weight:600;color:#4b5563;">Inter-campus transfer</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#006938;">Heriot-Watt Edinburgh or Dubai</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Edinburgh, UK / Dubai, UAE · QS #287</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+        <div class="art-cell"><div class="art-cell-label">Disciplines</div><div class="art-cell-val">Actuarial Science, Engineering, Business, Computing</div></div>
+        <div class="art-cell"><div class="art-cell-label">Transfer</div><div class="art-cell-val">Any year (Go Global programme)</div></div>
+        <div class="art-cell"><div class="art-cell-label">Award</div><div class="art-cell-val">Heriot-Watt University degree</div></div>
+        <div class="art-cell" style="border-right:none;"><div class="art-cell-label">Malaysia fee/yr</div><div class="art-cell-val">~$9,000</div></div>
+      </div>
+    </div>
+
+    <!-- Nottingham Malaysia to UK/China -->
+    <div class="art-card">
+      <div class="art-hdr">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#004B87;">University of Nottingham Malaysia</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Semenyih, Selangor, Malaysia</div>
+        </div>
+        <div style="text-align:center;padding:0 16px;">
+          <div style="font-size:22px;color:var(--ac)">⇄</div>
+          <div style="font-size:11px;font-weight:600;color:#4b5563;">Inter-campus transfer</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#004B87;">University of Nottingham UK or China</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Nottingham, UK / Ningbo, China · QS #97</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+        <div class="art-cell"><div class="art-cell-label">Disciplines</div><div class="art-cell-val">Engineering, Business, CS, Pharmacy, Biosciences, Social Sciences</div></div>
+        <div class="art-cell"><div class="art-cell-label">Transfer</div><div class="art-cell-val">Any year (good academic standing)</div></div>
+        <div class="art-cell"><div class="art-cell-label">Award</div><div class="art-cell-val">University of Nottingham degree · Same as UK</div></div>
+        <div class="art-cell" style="border-right:none;"><div class="art-cell-label">Malaysia fee/yr</div><div class="art-cell-val">~$10,000</div></div>
+      </div>
+    </div>
+
+    <!-- Middlesex Mauritius to London/Dubai -->
+    <div class="art-card">
+      <div class="art-hdr">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#8B0000;">Middlesex University Mauritius</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Vacoas, Mauritius</div>
+        </div>
+        <div style="text-align:center;padding:0 16px;">
+          <div style="font-size:22px;color:var(--ac)">⇄</div>
+          <div style="font-size:11px;font-weight:600;color:#4b5563;">Inter-campus transfer</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#8B0000;">Middlesex University London or Dubai</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 London, UK / Dubai, UAE · QS #721</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+        <div class="art-cell"><div class="art-cell-label">Disciplines</div><div class="art-cell-val">Accounting, Business, Law, IT, Psychology, Advertising</div></div>
+        <div class="art-cell"><div class="art-cell-label">Transfer</div><div class="art-cell-val">Year 2 or 3 (subject to performance)</div></div>
+        <div class="art-cell"><div class="art-cell-label">Award</div><div class="art-cell-val">Middlesex University London degree</div></div>
+        <div class="art-cell" style="border-right:none;"><div class="art-cell-label">Mauritius fee/yr</div><div class="art-cell-val">~$7,500</div></div>
+      </div>
+    </div>
+
+    <!-- Coventry Egypt to UK -->
+    <div class="art-card">
+      <div class="art-hdr">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#7B1FA2;">Coventry University Egypt (TKH)</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 New Administrative Capital, Cairo, Egypt</div>
+        </div>
+        <div style="text-align:center;padding:0 16px;">
+          <div style="font-size:22px;color:var(--ac)">→</div>
+          <div style="font-size:11px;font-weight:600;color:#4b5563;">3+0 or pathway to UK</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#7B1FA2;">Coventry University UK</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Coventry, UK · QS #651–700</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+        <div class="art-cell"><div class="art-cell-label">Disciplines</div><div class="art-cell-val">Engineering, Computing, Business, Media</div></div>
+        <div class="art-cell"><div class="art-cell-label">Model</div><div class="art-cell-val">Full degree in Egypt or transfer to UK</div></div>
+        <div class="art-cell"><div class="art-cell-label">Award</div><div class="art-cell-val">Coventry University UK degree · Identical to home campus</div></div>
+        <div class="art-cell" style="border-right:none;"><div class="art-cell-label">Egypt fee/yr</div><div class="art-cell-val">~$5,000</div></div>
+      </div>
+    </div>
+
+    <!-- Southampton Delhi to UK/Malaysia -->
+    <div class="art-card">
+      <div class="art-hdr">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#003366;">University of Southampton Delhi</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Gurugram, Haryana, India</div>
+        </div>
+        <div style="text-align:center;padding:0 16px;">
+          <div style="font-size:22px;color:var(--ac)">⇄</div>
+          <div style="font-size:11px;font-weight:600;color:#4b5563;">Semester abroad option</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#003366;">University of Southampton UK or Malaysia</div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:2px;">📍 Southampton, UK / Malaysia · QS #81</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+        <div class="art-cell"><div class="art-cell-label">Disciplines</div><div class="art-cell-val">Business, CS, Accounting, Economics, Engineering, Finance</div></div>
+        <div class="art-cell"><div class="art-cell-label">Transfer</div><div class="art-cell-val">Up to 1 year at UK or Malaysia campus</div></div>
+        <div class="art-cell"><div class="art-cell-label">Award</div><div class="art-cell-val">University of Southampton degree · Same as UK</div></div>
+        <div class="art-cell" style="border-right:none;"><div class="art-cell-label">India fee/yr</div><div class="art-cell-val">~$13,500</div></div>
+      </div>
+    </div>
+
+  </div>
+  <!-- END STATIC AGREEMENTS -->
+
 
   <div class="infobox" style="margin-top:8px"><strong>Note:</strong> Articulation agreements change frequently. Always verify directly with both institutions that the agreement is current and covers your specific programme before applying. TNE Institute verifies agreements periodically but cannot guarantee real-time accuracy. <span style="color:var(--ac);cursor:pointer" onclick="window.open('mailto:mark@tneinstitute.org')">Contact us</span> if you know of an agreement not listed here.</div>
 
@@ -934,7 +1145,7 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
       <div class="tcard">
         <div class="tcard-icon">🏆</div>
         <div class="tcard-title">What is QS World Ranking?</div>
-        <div class="tcard-body">QS World University Rankings ranks universities globally across 6 indicators including academic reputation, employer reputation, faculty-to-student ratio, and research impact. A university ranked #1–100 is in the global top 1% , exceptionally competitive and internationally recognised. TNE Institute only includes universities within the top 500. Learn more at <a href="https://www.topuniversities.com" target="_blank" style="color:var(--bl)">topuniversities.com</a>.</div>
+        <div class="tcard-body">QS World University Rankings ranks universities globally across 6 indicators including academic reputation, employer reputation, faculty-to-student ratio, and research impact. A university ranked #1–100 is in the global top 1% , exceptionally competitive and internationally recognised. TNE Institute only includes universities within the top 1000. Learn more at <a href="https://www.topuniversities.com" target="_blank" style="color:var(--bl)">topuniversities.com</a>.</div>
       </div>
       <div class="tcard">
         <div class="tcard-icon">📚</div>
@@ -1516,32 +1727,48 @@ function renderC(res,ql,al,ib,ie,city){
 
 // University brand colours and marks
 const UNI_BRANDS = {
+  // Lancaster University
+  "Lancaster University": {bg:"#B5121B",fg:"#ffffff",shape:"shield",abbr:"LU"},
+  "Lancaster University Ghana": {bg:"#B5121B",fg:"#ffffff",shape:"shield",abbr:"LU"},
+  "Lancaster University Leipzig": {bg:"#B5121B",fg:"#ffffff",shape:"shield",abbr:"LU"},
+  "Lancaster University Malaysia": {bg:"#B5121B",fg:"#ffffff",shape:"shield",abbr:"LU"},
+  "Deakin University Lancaster": {bg:"#B5121B",fg:"#ffffff",shape:"square",abbr:"DUL"},
+  "Lancaster University Bengaluru": {bg:"#B5121B",fg:"#ffffff",shape:"shield",abbr:"LU"},
+  // Middlesex University
+  "Middlesex University": {bg:"#8B0000",fg:"#ffffff",shape:"square",abbr:"MDX"},
+  "Middlesex University Dubai": {bg:"#8B0000",fg:"#ffffff",shape:"square",abbr:"MDX"},
+  "Middlesex University Mauritius": {bg:"#8B0000",fg:"#ffffff",shape:"square",abbr:"MDX"},
+  "Middlesex University Malta": {bg:"#8B0000",fg:"#ffffff",shape:"square",abbr:"MDX"},
+  // Heriot-Watt University
+  "Heriot-Watt University": {bg:"#006938",fg:"#ffffff",shape:"square",abbr:"H-W"},
+  "Heriot-Watt University Dubai": {bg:"#006938",fg:"#ffffff",shape:"square",abbr:"H-W"},
+  "Heriot-Watt University Malaysia": {bg:"#006938",fg:"#ffffff",shape:"square",abbr:"H-W"},
+  // Coventry University
+  "Coventry University": {bg:"#7B1FA2",fg:"#ffffff",shape:"square",abbr:"CU"},
+  "Coventry University Egypt": {bg:"#7B1FA2",fg:"#ffffff",shape:"square",abbr:"CU"},
+  "Coventry University Wroclaw": {bg:"#7B1FA2",fg:"#ffffff",shape:"square",abbr:"CU"},
+  "Coventry University Morocco": {bg:"#7B1FA2",fg:"#ffffff",shape:"square",abbr:"CU"},
+  "Coventry University India": {bg:"#7B1FA2",fg:"#ffffff",shape:"square",abbr:"CU"},
+  // University of Nottingham
+  "University of Nottingham": {bg:"#004B87",fg:"#ffffff",shape:"shield",abbr:"UoN"},
+  "University of Nottingham Malaysia": {bg:"#004B87",fg:"#ffffff",shape:"shield",abbr:"UoN"},
+  "University of Nottingham Ningbo China": {bg:"#004B87",fg:"#ffffff",shape:"shield",abbr:"UoN"},
+  // De Montfort University
+  "De Montfort University": {bg:"#003366",fg:"#ffffff",shape:"square",abbr:"DMU"},
+  "De Montfort University Cambodia": {bg:"#003366",fg:"#ffffff",shape:"square",abbr:"DMU"},
+  "DMU Dubai": {bg:"#003366",fg:"#ffffff",shape:"square",abbr:"DMU"},
+  // University of Southampton
+  "University of Southampton": {bg:"#003366",fg:"#ffffff",shape:"shield",abbr:"UoS"},
+  "University of Southampton Delhi": {bg:"#003366",fg:"#ffffff",shape:"shield",abbr:"UoS"},
+  "Southampton Malaysia Campus": {bg:"#003366",fg:"#ffffff",shape:"shield",abbr:"UoS"},
+  // Legacy entries kept for existing data
   "University of Birmingham": {bg:"#003366",fg:"#ffffff",shape:"shield",abbr:"UoB"},
   "University of Birmingham Dubai": {bg:"#003366",fg:"#ffffff",shape:"shield",abbr:"UoB"},
   "University of Glasgow": {bg:"#003865",fg:"#ffffff",shape:"shield",abbr:"GLA"},
   "Carnegie Mellon University": {bg:"#C41230",fg:"#ffffff",shape:"square",abbr:"CMU"},
   "Carnegie Mellon University Africa": {bg:"#C41230",fg:"#ffffff",shape:"square",abbr:"CMU"},
-  "Heriot-Watt University": {bg:"#006938",fg:"#ffffff",shape:"square",abbr:"H-W"},
-  "Heriot-Watt University Dubai": {bg:"#006938",fg:"#ffffff",shape:"square",abbr:"H-W"},
-  "Heriot-Watt University Malaysia": {bg:"#006938",fg:"#ffffff",shape:"square",abbr:"H-W"},
   "University of Wollongong": {bg:"#003DA5",fg:"#ffffff",shape:"square",abbr:"UOW"},
   "University of Wollongong Dubai": {bg:"#003DA5",fg:"#ffffff",shape:"square",abbr:"UOW"},
-  "University of Cape Town": {bg:"#003B5C",fg:"#ffffff",shape:"shield",abbr:"UCT"},
-  "London School of Economics": {bg:"#8B0000",fg:"#ffffff",shape:"square",abbr:"LSE"},
-  "University of Edinburgh": {bg:"#00325F",fg:"#ffffff",shape:"shield",abbr:"UoE"},
-  "University of Toronto": {bg:"#00204E",fg:"#ffffff",shape:"shield",abbr:"UoT"},
-  "University of Melbourne": {bg:"#003087",fg:"#FFD100",shape:"shield",abbr:"UoM"},
-  "Imperial College London": {bg:"#003E74",fg:"#ffffff",shape:"square",abbr:"ICL"},
-  "University of Manchester": {bg:"#660099",fg:"#ffffff",shape:"shield",abbr:"UoM"},
-  "University of Nottingham": {bg:"#004B87",fg:"#ffffff",shape:"shield",abbr:"UoN"},
-  "Manipal University Dubai": {bg:"#C83329",fg:"#ffffff",shape:"square",abbr:"MU"},
-  "University of Johannesburg": {bg:"#006DB7",fg:"#ffffff",shape:"square",abbr:"UJ"},
-  "University of Ottawa": {bg:"#8B0000",fg:"#FFFFFF",shape:"square",abbr:"UoO"},
-  "Universite Paris-Dauphine": {bg:"#003087",fg:"#ffffff",shape:"square",abbr:"PSL"},
-  "University of London Worldwide": {bg:"#8B0000",fg:"#ffffff",shape:"shield",abbr:"UoL"},
-  "University of the People": {bg:"#2D6A4F",fg:"#ffffff",shape:"square",abbr:"UoP"},
-  "ACCA Online": {bg:"#7B2D8B",fg:"#ffffff",shape:"square",abbr:"ACCA"},
-  "University of Mauritius": {bg:"#003580",fg:"#ffffff",shape:"shield",abbr:"UoMu"},
 };
 
 function getUniLogoHTML(uniName, fallbackLetter, fallbackBg, fallbackFg) {
@@ -1689,6 +1916,44 @@ function resetAll(){
   doSearch();
 }
 
+
+// ── INDIA TABLE FILTERS ──
+function filterIndiaTable(){
+  const city = document.getElementById('india-city').value.toLowerCase();
+  const ug = document.getElementById('india-ug').value.toLowerCase();
+  const pg = document.getElementById('india-pg').value.toLowerCase();
+  
+  const rows = document.querySelectorAll('.india-row');
+  let visible = 0;
+  
+  rows.forEach(row => {
+    const rowCity = row.dataset.city ? row.dataset.city.toLowerCase() : '';
+    const rowUg = row.dataset.ug ? row.dataset.ug.toLowerCase() : '';
+    const rowPg = row.dataset.pg ? row.dataset.pg.toLowerCase() : '';
+    
+    const cityMatch = !city || rowCity.includes(city.toLowerCase().split(' ')[0]);
+    const ugMatch = !ug || rowUg.includes(ug.toLowerCase());
+    const pgMatch = !pg || rowPg.includes(pg.toLowerCase());
+    
+    if(cityMatch && ugMatch && pgMatch){
+      row.style.display = '';
+      visible++;
+    } else {
+      row.style.display = 'none';
+    }
+  });
+  
+  const countEl = document.getElementById('india-count');
+  if(countEl) countEl.textContent = `Showing ${visible} of 9 universities`;
+}
+
+function resetIndiaFilters(){
+  document.getElementById('india-city').value = '';
+  document.getElementById('india-ug').value = '';
+  document.getElementById('india-pg').value = '';
+  filterIndiaTable();
+}
+
 function toggleGradesPanel(){
   const panel=document.getElementById('gpanel-adv');
   const btn=document.getElementById('grades-toggle-btn');
@@ -1808,6 +2073,11 @@ function showPage(pg){
   if(["data"].includes(pg)){
     const ab=document.getElementById("nl-about");
     if(ab)ab.classList.add("active");
+  }
+  // focus group , highlight focus button
+  if(["india"].includes(pg)){
+    const fc=document.getElementById("nl-focus");
+    if(fc)fc.classList.add("active");
   }
   window.scrollTo({top:0,behavior:"smooth"});
   if(pg==="articulation")renderArt();
@@ -2156,7 +2426,7 @@ window.addEventListener("load",()=>{initData();});
   </div>
 
   <div class="infobox">
-    <strong>A note on our current scope:</strong> TNE Institute currently focuses on Africa and universities within the global top 500 by QS World Ranking. This is a deliberate starting point, not a permanent limit. We have chosen depth over breadth in our launch phase to ensure data quality and genuine relevance to our initial markets. We will expand to additional regions and a wider university set as the platform develops. If your institution or market is not yet covered, we welcome your contact.
+    <strong>A note on our current scope:</strong> TNE Institute currently focuses on Africa and universities within the global top 1000 by QS World Ranking. This is a deliberate starting point, not a permanent limit. We have chosen depth over breadth in our launch phase to ensure data quality and genuine relevance to our initial markets. We will expand to additional regions and a wider university set as the platform develops. If your institution or market is not yet covered, we welcome your contact.
   </div>
 
   <div class="cpsec">
@@ -2196,5 +2466,361 @@ window.addEventListener("load",()=>{initData();});
 </div>
 </div>
 
+
+<!-- ══════════════════════════════════════
+     INDIA PAGE
+══════════════════════════════════════ -->
+<div id="page-india" class="page">
+<div class="cp" style="max-width:1100px;">
+  <div class="cpey">In Focus · India</div>
+  <h1 class="cptitle">UK Branch Campuses<br><span class="grad">in India — Head to Head</span></h1>
+  <p class="cplead">Nine UK universities have confirmed branch campuses in India under UGC Regulations 2023. One is already open. The rest open between 2026 and 2027. This page compares all nine across the factors that matter most.</p>
+
+  <div class="infobox" style="margin-bottom:28px;"><strong>📌 What is a branch campus degree?</strong> You study in India and graduate with an identical UK degree — same title, same award, same transcript as students on the home campus. UGC-approved under India's National Education Policy 2020. All nine universities below are approved under this framework.</div>
+
+  <!-- STATUS STRIP -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;">
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;text-align:center;">
+      <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:#15803d;">1</div>
+      <div style="font-size:12px;color:#374151;margin-top:4px;">Campus open and taking students<br><span style="color:#9ca3af;">(Southampton, Gurugram)</span></div>
+    </div>
+    <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:16px;text-align:center;">
+      <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:#b45309;">8</div>
+      <div style="font-size:12px;color:#374151;margin-top:4px;">Campuses approved, opening 2026–2027<br><span style="color:#9ca3af;">(Liverpool, Bristol, York, Aberdeen, Lancaster, Surrey, QUB, Coventry)</span></div>
+    </div>
+    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:16px;text-align:center;">
+      <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--ac);">~40%</div>
+      <div style="font-size:12px;color:#374151;margin-top:4px;">Estimated cost saving vs full UK study<br><span style="color:#9ca3af;">(tuition only, excl. living abroad)</span></div>
+    </div>
+  </div>
+
+  <!-- FULL COMPARISON TABLE -->
+  <div class="cpst" style="margin-bottom:12px;">Full Comparison — All Nine UK Campuses</div>
+
+  <!-- FILTERS -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:flex-end;">
+    <div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;margin-bottom:5px;">City</div>
+      <select id="india-city" onchange="filterIndiaTable()" style="padding:8px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;color:#1a1d2e;font-size:13px;font-family:'Outfit',sans-serif;outline:none;appearance:none;cursor:pointer;min-width:160px;">
+        <option value="">All cities</option>
+        <option value="Gurugram">Gurugram (Delhi NCR)</option>
+        <option value="Bengaluru">Bengaluru</option>
+        <option value="Mumbai">Mumbai / Navi Mumbai</option>
+        <option value="GIFT City">GIFT City (Gujarat)</option>
+      </select>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;margin-bottom:5px;">UG Programme</div>
+      <select id="india-ug" onchange="filterIndiaTable()" style="padding:8px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;color:#1a1d2e;font-size:13px;font-family:'Outfit',sans-serif;outline:none;appearance:none;cursor:pointer;min-width:200px;">
+        <option value="">All UG programmes</option>
+        <option value="Business">Business / Management</option>
+        <option value="Computer Science">Computer Science</option>
+        <option value="Economics">Economics</option>
+        <option value="Accounting">Accounting &amp; Finance</option>
+        <option value="Data Science">Data Science</option>
+        <option value="Engineering">Engineering</option>
+        <option value="Biomedical">Biomedical Sciences</option>
+        <option value="AI">AI / Cyber Security</option>
+        <option value="Creative">Creative Industries / Arts</option>
+        <option value="Game Design">Game Design</option>
+        <option value="Law">Law</option>
+        <option value="Energy">Energy</option>
+      </select>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;margin-bottom:5px;">PG Programme</div>
+      <select id="india-pg" onchange="filterIndiaTable()" style="padding:8px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;color:#1a1d2e;font-size:13px;font-family:'Outfit',sans-serif;outline:none;appearance:none;cursor:pointer;min-width:200px;">
+        <option value="">All PG programmes</option>
+        <option value="Finance">Finance</option>
+        <option value="Management">Management</option>
+        <option value="Data Science">Data Science / MSc Data Science</option>
+        <option value="FinTech">FinTech</option>
+        <option value="Economics">Economics</option>
+        <option value="Computer Science">Computer Science</option>
+        <option value="Software">Software Development</option>
+        <option value="AI">Artificial Intelligence</option>
+        <option value="Immersive">Immersive Arts</option>
+        <option value="International Management">International Management</option>
+      </select>
+    </div>
+    <div style="align-self:flex-end;">
+      <button onclick="resetIndiaFilters()" style="padding:8px 14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;color:#6b7280;font-size:12px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;">Clear filters</button>
+    </div>
+    <div style="align-self:flex-end;margin-left:auto;">
+      <div id="india-count" style="font-size:12px;color:#9ca3af;">Showing 9 universities</div>
+    </div>
+  </div>
+
+  <div style="overflow-x:auto;margin-bottom:32px;">
+    <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);font-size:12px;min-width:900px;">
+      <thead>
+        <tr style="background:#f9fafb;border-bottom:2px solid #e5e7eb;">
+          <th style="padding:12px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;">University</th>
+          <th style="padding:12px 14px;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;">Location</th>
+          <th style="padding:12px 14px;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;">QS Rank</th>
+          <th style="padding:12px 14px;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;">Russell Group</th>
+          <th style="padding:12px 14px;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;">UG Fee/yr</th>
+          <th style="padding:12px 14px;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;">PGT Fee/yr</th>
+          <th style="padding:12px 14px;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;">Open?</th>
+          <th style="padding:12px 14px;text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;">UK Transfer</th>
+          <th style="padding:12px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;">UG Programmes</th>
+          <th style="padding:12px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;">PG Programmes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="india-row" style="border-bottom:1px solid #f3f4f6;background:#f0fdf4;" data-city="Gurugram" data-ug="business management computer science accounting finance economics creative computing engineering software" data-pg="finance international management economics data science">
+          <td style="padding:11px 14px;font-weight:700;color:#003366;">🏆 Southampton</td>
+          <td style="padding:11px 14px;text-align:center;color:#6b7280;">Gurugram<br><span style="font-size:10px;">Delhi NCR</span></td>
+          <td style="padding:11px 14px;text-align:center;font-weight:700;">#81</td>
+          <td style="padding:11px 14px;text-align:center;color:#15803d;font-weight:700;">✓</td>
+          <td style="padding:11px 14px;text-align:center;font-weight:600;">₹13.2–13.9L</td>
+          <td style="padding:11px 14px;text-align:center;font-weight:600;">₹17–23L</td>
+          <td style="padding:11px 14px;text-align:center;"><span style="background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;">Open 2025</span></td>
+          <td style="padding:11px 14px;text-align:center;color:#15803d;font-weight:600;">✓ Up to 1 yr</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">Business Management<br>Computer Science<br>Accounting &amp; Finance<br>Economics<br>Creative Computing<br>Software Engineering (BEng)</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">MSc Finance<br>MSc International Management<br>MSc Economics<br>MSc Data Science</td>
+        </tr>
+        <tr class="india-row" style="border-bottom:1px solid #f3f4f6;" data-city="Bengaluru" data-ug="computer science software development business management accounting finance biomedical sciences game design creative" data-pg="computer science software development">
+          <td style="padding:11px 14px;font-weight:700;color:#C41230;">Liverpool</td>
+          <td style="padding:11px 14px;text-align:center;color:#6b7280;">Whitefield<br><span style="font-size:10px;">Bengaluru</span></td>
+          <td style="padding:11px 14px;text-align:center;font-weight:700;">#147</td>
+          <td style="padding:11px 14px;text-align:center;color:#15803d;font-weight:700;">✓</td>
+          <td style="padding:11px 14px;text-align:center;font-weight:600;">₹11.5L</td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;text-align:center;"><span style="background:#fffbeb;color:#b45309;border:1px solid #fde68a;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;">2026</span></td>
+          <td style="padding:11px 14px;text-align:center;color:#15803d;font-weight:600;">✓ Final yr incl.</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">Computer Science<br>Software Development<br>Business Management<br>Accounting &amp; Finance<br>Biomedical Sciences<br>Game Design ★</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">MSc Computer Science<br>MSc Software Development</td>
+        </tr>
+        <tr class="india-row" style="border-bottom:1px solid #f3f4f6;background:#fafafa;" data-city="Mumbai" data-ug="data science economics" data-pg="finance fintech immersive arts">
+          <td style="padding:11px 14px;font-weight:700;color:#8B1A1A;">Bristol</td>
+          <td style="padding:11px 14px;text-align:center;color:#6b7280;">Mumbai<br><span style="font-size:10px;">Enterprise Campus</span></td>
+          <td style="padding:11px 14px;text-align:center;font-weight:700;">#51</td>
+          <td style="padding:11px 14px;text-align:center;color:#15803d;font-weight:700;">✓</td>
+          <td style="padding:11px 14px;text-align:center;font-weight:600;">₹15–17L</td>
+          <td style="padding:11px 14px;text-align:center;font-weight:600;">₹18–22L</td>
+          <td style="padding:11px 14px;text-align:center;"><span style="background:#fffbeb;color:#b45309;border:1px solid #fde68a;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;">2026</span></td>
+          <td style="padding:11px 14px;text-align:center;color:#4b5563;">✓ Semester</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">BSc Data Science<br>BSc Economics<br>BSc Economics &amp; Data Science</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">MSc FinTech with Data Science<br>MSc Finance &amp; Investment<br>MA Immersive Arts</td>
+        </tr>
+        <tr class="india-row" style="border-bottom:1px solid #f3f4f6;" data-city="Mumbai" data-ug="computer science ai cyber security business economics creative industries creative" data-pg="management finance ai artificial intelligence">
+          <td style="padding:11px 14px;font-weight:700;color:#00325F;">York</td>
+          <td style="padding:11px 14px;text-align:center;color:#6b7280;">Navi Mumbai</td>
+          <td style="padding:11px 14px;text-align:center;font-weight:700;">#169</td>
+          <td style="padding:11px 14px;text-align:center;color:#dc2626;font-weight:700;">✗</td>
+          <td style="padding:11px 14px;text-align:center;font-weight:600;">₹12.5L</td>
+          <td style="padding:11px 14px;text-align:center;font-weight:600;">₹15–18.5L</td>
+          <td style="padding:11px 14px;text-align:center;"><span style="background:#fffbeb;color:#b45309;border:1px solid #fde68a;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;">Late 2026</span></td>
+          <td style="padding:11px 14px;text-align:center;color:#4b5563;">✓ Semester</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">CS with AI &amp; Cyber Security<br>BSc Business<br>BSc Economics<br>BA Creative Industries</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">MSc Management<br>MSc Finance<br>MSc Artificial Intelligence</td>
+        </tr>
+        <tr class="india-row" style="border-bottom:1px solid #f3f4f6;background:#fafafa;" data-city="Mumbai" data-ug="energy law business engineering" data-pg="tbc">
+          <td style="padding:11px 14px;font-weight:700;color:#003865;">Aberdeen</td>
+          <td style="padding:11px 14px;text-align:center;color:#6b7280;">Navi Mumbai</td>
+          <td style="padding:11px 14px;text-align:center;font-weight:700;">#383</td>
+          <td style="padding:11px 14px;text-align:center;color:#dc2626;font-weight:700;">✗</td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;text-align:center;"><span style="background:#fffbeb;color:#b45309;border:1px solid #fde68a;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;">2027</span></td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">Energy, Law, Business, Engineering</td>
+          <td style="padding:11px 14px;color:#9ca3af;font-size:11px;font-style:italic;">TBC</td>
+        </tr>
+        <tr class="india-row" style="border-bottom:1px solid #f3f4f6;" data-city="Bengaluru" data-ug="business management technology" data-pg="tbc">
+          <td style="padding:11px 14px;font-weight:700;color:#B5121B;">Lancaster</td>
+          <td style="padding:11px 14px;text-align:center;color:#6b7280;">Bengaluru</td>
+          <td style="padding:11px 14px;text-align:center;font-weight:700;">#209</td>
+          <td style="padding:11px 14px;text-align:center;color:#dc2626;font-weight:700;">✗</td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;text-align:center;"><span style="background:#fffbeb;color:#b45309;border:1px solid #fde68a;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;">2026–27</span></td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">Business, Management, Technology</td>
+          <td style="padding:11px 14px;color:#9ca3af;font-size:11px;font-style:italic;">TBC</td>
+        </tr>
+        <tr class="india-row" style="border-bottom:1px solid #f3f4f6;background:#fafafa;" data-city="GIFT City" data-ug="finance ai cyber security" data-pg="tbc">
+          <td style="padding:11px 14px;font-weight:700;color:#4B0082;">Surrey</td>
+          <td style="padding:11px 14px;text-align:center;color:#6b7280;">GIFT City<br><span style="font-size:10px;">Gujarat</span></td>
+          <td style="padding:11px 14px;text-align:center;font-weight:700;">#323</td>
+          <td style="padding:11px 14px;text-align:center;color:#dc2626;font-weight:700;">✗</td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;text-align:center;"><span style="background:#fffbeb;color:#b45309;border:1px solid #fde68a;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;">2026–27</span></td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">Finance, AI, Cyber Security</td>
+          <td style="padding:11px 14px;color:#9ca3af;font-size:11px;font-style:italic;">TBC</td>
+        </tr>
+        <tr class="india-row" style="border-bottom:1px solid #f3f4f6;" data-city="GIFT City" data-ug="law business technology engineering" data-pg="tbc">
+          <td style="padding:11px 14px;font-weight:700;color:#003366;">Queen's Belfast</td>
+          <td style="padding:11px 14px;text-align:center;color:#6b7280;">GIFT City<br><span style="font-size:10px;">Gujarat</span></td>
+          <td style="padding:11px 14px;text-align:center;font-weight:700;">#253</td>
+          <td style="padding:11px 14px;text-align:center;color:#15803d;font-weight:700;">✓</td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;text-align:center;"><span style="background:#fffbeb;color:#b45309;border:1px solid #fde68a;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;">2026</span></td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">Law, Business, Technology, Engineering</td>
+          <td style="padding:11px 14px;color:#9ca3af;font-size:11px;font-style:italic;">TBC</td>
+        </tr>
+        <tr class="india-row" style="border-bottom:1px solid #f3f4f6;" data-city="GIFT City" data-ug="business engineering computing computer science" data-pg="tbc">
+          <td style="padding:11px 14px;font-weight:700;color:#7B1FA2;">Coventry</td>
+          <td style="padding:11px 14px;text-align:center;color:#6b7280;">GIFT City<br><span style="font-size:10px;">Gujarat</span></td>
+          <td style="padding:11px 14px;text-align:center;font-weight:700;">#651–700</td>
+          <td style="padding:11px 14px;text-align:center;color:#dc2626;font-weight:700;">✗</td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;text-align:center;"><span style="background:#fffbeb;color:#b45309;border:1px solid #fde68a;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;">2026–27</span></td>
+          <td style="padding:11px 14px;text-align:center;color:#9ca3af;">TBC</td>
+          <td style="padding:11px 14px;color:#4b5563;font-size:11px;">Business, Engineering, Computing</td>
+          <td style="padding:11px 14px;color:#9ca3af;font-size:11px;font-style:italic;">TBC</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DETAILED PROFILES - Top 4 most advanced -->
+  <div class="cpst" style="margin-bottom:16px;">Detailed Profiles — Most Advanced Campuses</div>
+  <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:32px;">
+
+    <!-- SOUTHAMPTON -->
+    <div style="background:#fff;border:2px solid #003366;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+      <div style="background:linear-gradient(135deg,#003366,#004080);padding:16px 24px;display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;">UoS</div>
+        <div style="flex:1;"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff;">University of Southampton — Gurugram</div><div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:1px;">Russell Group · QS #81 · <strong style="color:#4ade80;">OPEN — First cohort enrolled August 2025</strong></div></div>
+        <span style="background:#4ade80;color:#064e3b;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;flex-shrink:0;">✓ Open Now</span>
+      </div>
+      <div style="padding:16px 24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Undergraduate (3 yrs)</div><div style="font-size:12px;color:#1a1d2e;line-height:1.9;">BSc Business Management<br>BSc Computer Science<br>BSc Accounting &amp; Finance<br>BSc Economics<br>BSc Creative Computing<br>BEng Software Engineering</div></div>
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Postgraduate (1 yr)</div><div style="font-size:12px;color:#1a1d2e;line-height:1.9;">MSc Finance<br>MSc International Management<br>MSc Economics<br>MSc Data Science</div></div>
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Key Data</div><div style="font-size:11px;color:#4b5563;line-height:1.9;">📍 Int'l Tech Park, Sector 59, Gurugram<br>💷 UG: ₹13.2–13.9L/yr<br>💷 PGT: ₹17–23L/yr<br>🔄 Up to 1 yr at Southampton UK or Malaysia<br>🏅 Russell Group<br>📊 Top 10 UK for Business &amp; Management<br>🎓 UGC approved · same degree as UK campus</div></div>
+      </div>
+      <div style="padding:0 24px 16px;"><div style="background:#f0f4ff;border:1px solid #c7d7fd;border-radius:8px;padding:10px 14px;font-size:12px;color:#4b5563;"><strong style="color:#003366;">TNE Institute view:</strong> The only campus currently open. Pioneer status and a 10-year expansion plan to 30+ programmes. Gurugram location is ideal for finance and corporate careers. Strong scholarship offer including full-tuition Presidential Scholarship.</div></div>
+    </div>
+
+    <!-- LIVERPOOL -->
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+      <div style="background:linear-gradient(135deg,#C41230,#9e0e26);padding:16px 24px;display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;">UoL</div>
+        <div style="flex:1;"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff;">University of Liverpool — Bengaluru</div><div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:1px;">Russell Group · QS #147 · Alembic City, Whitefield · Opening 2026</div></div>
+        <span style="background:#fde68a;color:#92400e;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;flex-shrink:0;">Opening 2026</span>
+      </div>
+      <div style="padding:16px 24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Undergraduate (3 yrs)</div><div style="font-size:12px;color:#1a1d2e;line-height:1.9;">BSc Computer Science<br>BSc Software Development<br>BSc Business Management<br>BSc Accounting &amp; Finance<br>BSc Biomedical Sciences<br>BSc Game Design <span style="color:var(--ac);font-size:10px;font-weight:700;">★ Unique in India</span></div></div>
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Postgraduate (1 yr)</div><div style="font-size:12px;color:#1a1d2e;line-height:1.9;">MSc Computer Science<br>MSc Software Development<br><em style="color:#9ca3af;font-size:11px;">Additional PG TBC</em></div></div>
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Key Data</div><div style="font-size:11px;color:#4b5563;line-height:1.9;">📍 Alembic City, Whitefield, Bengaluru<br>💷 UG: ₹11.5L/yr domestic<br>💷 International: ₹13L/yr<br>🔄 Final year at Liverpool UK included in tuition<br>🏅 Russell Group · 9 Nobel Laureates<br>⭐ TEF Gold teaching rating<br>💻 BCS accredited CS</div></div>
+      </div>
+      <div style="padding:0 24px 16px;"><div style="background:#fff5f5;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;font-size:12px;color:#4b5563;"><strong style="color:#C41230;">TNE Institute view:</strong> Most affordable Russell Group option. Game Design is genuinely unique across all nine campuses. Final year in Liverpool being included in tuition — not an optional extra — is the strongest UK transfer offer available.</div></div>
+    </div>
+
+    <!-- BRISTOL -->
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+      <div style="background:linear-gradient(135deg,#8B1A1A,#6d1414);padding:16px 24px;display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;">UoB</div>
+        <div style="flex:1;"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff;">University of Bristol — Mumbai</div><div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:1px;">Russell Group · QS #51 · Enterprise Campus · Opening Summer 2026</div></div>
+        <span style="background:#fde68a;color:#92400e;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;flex-shrink:0;">Summer 2026</span>
+      </div>
+      <div style="padding:16px 24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Undergraduate (3 yrs)</div><div style="font-size:12px;color:#1a1d2e;line-height:1.9;">BSc Data Science<br>BSc Economics<br>BSc Economics and Data Science</div></div>
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Postgraduate (1 yr)</div><div style="font-size:12px;color:#1a1d2e;line-height:1.9;">MSc Financial Technology with Data Science<br>MSc Finance &amp; Investment<br>MA Immersive Arts</div></div>
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Key Data</div><div style="font-size:11px;color:#4b5563;line-height:1.9;">📍 Mumbai Enterprise Campus<br>💷 UG: ₹15–17L/yr · PGT: ₹18–22L/yr<br>🔄 Semester exchange at Bristol UK<br>🏅 Russell Group · #51 globally<br>📊 Top 100 globally for Data Science &amp; AI<br>💼 CFA-aligned Finance curriculum<br>🎓 Think Big India Scholarships available</div></div>
+      </div>
+      <div style="padding:0 24px 16px;"><div style="background:#fff8f0;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:12px;color:#4b5563;"><strong style="color:#8B1A1A;">TNE Institute view:</strong> Highest-ranked campus in India at #51 globally. Premium pricing reflects premium positioning. Best for students targeting quant finance, investment banking, data science, or fintech in Mumbai's financial district. Think Big scholarships can significantly offset fees.</div></div>
+    </div>
+
+    <!-- YORK -->
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+      <div style="background:linear-gradient(135deg,#00325F,#004a8c);padding:16px 24px;display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;">UoY</div>
+        <div style="flex:1;"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff;">University of York — Navi Mumbai</div><div style="font-size:12px;color:rgba(255,255,255,0.7);margin-top:1px;">QS #169 · Letter of Intent received · Opening late 2026</div></div>
+        <span style="background:#fde68a;color:#92400e;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;flex-shrink:0;">Late 2026</span>
+      </div>
+      <div style="padding:16px 24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Undergraduate (3 yrs)</div><div style="font-size:12px;color:#1a1d2e;line-height:1.9;">BSc Computer Science with AI &amp; Cyber Security<br>BSc Business<br>BSc Economics<br>BA Creative Industries</div></div>
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Postgraduate (1 yr)</div><div style="font-size:12px;color:#1a1d2e;line-height:1.9;">MSc Management<br>MSc Finance<br>MSc Artificial Intelligence</div></div>
+        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Key Data</div><div style="font-size:11px;color:#4b5563;line-height:1.9;">📍 Navi Mumbai<br>💷 UG: ₹12.5L/yr domestic<br>💷 International: ₹14L/yr<br>🔄 Semester exchange at York UK<br>⚠️ Not Russell Group<br>🤖 Specialist in AI &amp; Cyber Security</div></div>
+      </div>
+      <div style="padding:0 24px 16px;"><div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 14px;font-size:12px;color:#4b5563;"><strong style="color:#00325F;">TNE Institute view:</strong> Not Russell Group, but York has genuine strength in AI and cyber security — two of the highest-demand disciplines in India's tech sector. Mid-range pricing. Watch for programme confirmations as 2026 opening approaches.</div></div>
+    </div>
+  </div>
+
+  <!-- CAMPUSES AT A GLANCE - remaining 5 -->
+  <div class="cpst" style="margin-bottom:16px;">Earlier Stage — Confirmed but Opening 2026–2027</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:32px;">
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:#003865;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;">UoA</div>
+        <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#003865;">University of Aberdeen</div><div style="font-size:11px;color:#9ca3af;">QS #383 · Navi Mumbai · 2027</div></div>
+      </div>
+      <div style="font-size:12px;color:#4b5563;line-height:1.65;margin-bottom:10px;">Scotland's first university in India. LoI received June 2025. Known for Energy, Law, and Engineering. Strong for students targeting oil &amp; gas, sustainability, and legal careers.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;"><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Energy</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Law</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Engineering</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Business</span></div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:#B5121B;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;">LU</div>
+        <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#B5121B;">Lancaster University</div><div style="font-size:11px;color:#9ca3af;">QS #209 · Bengaluru · 2026–27</div></div>
+      </div>
+      <div style="font-size:12px;color:#4b5563;line-height:1.65;margin-bottom:10px;">Approved October 2025. Bengaluru campus focuses on education, technology, and business. Known for strong management school. Aims to collaborate with Indian companies and regional universities.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;"><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Management</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Technology</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Business</span></div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:#4B0082;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;">UoS</div>
+        <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#4B0082;">University of Surrey</div><div style="font-size:11px;color:#9ca3af;">QS #323 · GIFT City, Gujarat · 2026–27</div></div>
+      </div>
+      <div style="font-size:12px;color:#4b5563;line-height:1.65;margin-bottom:10px;">Approved October 2025. GIFT City location means a special economic zone with additional benefits. Initial focus on Finance, AI, and Cyber Security — well aligned with India's fintech boom.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;"><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Finance</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">AI</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Cyber Security</span></div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:#003366;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;">QUB</div>
+        <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#003366;">Queen's University Belfast</div><div style="font-size:11px;color:#9ca3af;">QS #253 · GIFT City, Gujarat · 2026 · Russell Group</div></div>
+      </div>
+      <div style="font-size:12px;color:#4b5563;line-height:1.65;margin-bottom:10px;">Russell Group member opening in GIFT City. Known for Law, Business, and Engineering. The GIFT City location offers unique exposure to international financial services. Supported by T&amp;A Consulting.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;"><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;">Russell Group</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Law</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Business</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Engineering</span></div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:36px;height:36px;border-radius:8px;background:#7B1FA2;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;">CU</div>
+        <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#7B1FA2;">Coventry University</div><div style="font-size:11px;color:#9ca3af;">QS #651–700 · GIFT City, Gujarat · 2026–27</div></div>
+      </div>
+      <div style="font-size:12px;color:#4b5563;line-height:1.65;margin-bottom:10px;">Most accessible entry point among the nine. Coventry has a strong international reputation for industry-focused education and has operated branch campuses in multiple countries including the UK. Working with Study World Group.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;"><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Business</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Engineering</span><span style="padding:2px 7px;border-radius:10px;font-size:10px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;">Computing</span></div>
+    </div>
+
+    <!-- GIFT CITY NOTE -->
+    <div style="background:linear-gradient(135deg,#f0fdf8,#eff6ff);border:1px solid #a7f3d0;border-radius:12px;padding:18px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#047857;margin-bottom:8px;">📍 About GIFT City</div>
+      <div style="font-size:12px;color:#374151;line-height:1.65;">Gujarat International Finance Tec-City is India's first operational smart city and international financial services centre. Universities based there (Surrey, Queen's Belfast, Coventry) operate under IFSCA regulations, offering additional tax advantages and a specialised financial services environment.</div>
+    </div>
+  </div>
+
+  <!-- WHICH ONE? -->
+  <div class="cpsec">
+    <div class="cpst">Which campus is right for you?</div>
+    <div class="tgrid">
+      <div class="tcard"><div class="tcard-icon">🏆</div><div class="tcard-title" style="color:var(--ac)">If you want to start now</div><div class="tcard-body">Only Southampton is currently open. If you are applying for August 2025 or August 2026 entry, Southampton is your only confirmed option. Liverpool is the next most advanced, with applications open for 2026.</div></div>
+      <div class="tcard"><div class="tcard-icon">🏅</div><div class="tcard-title" style="color:var(--ac)">If Russell Group is essential</div><div class="tcard-body">Southampton, Liverpool, Bristol, and Queen's Belfast are all Russell Group. York, Aberdeen, Lancaster, Surrey, and Coventry are not. For most Indian employers this matters less than subject and class of degree, but it remains significant for UK employers.</div></div>
+      <div class="tcard"><div class="tcard-icon">📊</div><div class="tcard-title" style="color:var(--ac)">If ranking is the priority</div><div class="tcard-body">Bristol (#51) is highest-ranked, followed by Southampton (#81), Liverpool (#147), York (#169), Lancaster (#209), Queen's Belfast (#253), Surrey (#323), Aberdeen (#383). Bristol costs the most; Liverpool costs the least among the top four.</div></div>
+      <div class="tcard"><div class="tcard-icon">💰</div><div class="tcard-title" style="color:var(--ac)">If cost is the priority</div><div class="tcard-body">Liverpool at ₹11.5L/yr is the most affordable confirmed Russell Group option. York at ₹12.5L/yr is similar without Russell Group status. Bristol at ₹15–17L/yr is the most expensive among those with confirmed fees.</div></div>
+      <div class="tcard"><div class="tcard-icon">🔄</div><div class="tcard-title" style="color:var(--ac)">If UK transfer matters to you</div><div class="tcard-body">Liverpool stands out: the final year in Liverpool is included in India tuition fees — genuinely integrated, not an optional add-on. All others offer semester exchanges or year abroad options as separate arrangements.</div></div>
+      <div class="tcard"><div class="tcard-icon">💻</div><div class="tcard-title" style="color:var(--ac)">If you want tech or AI</div><div class="tcard-body">Liverpool (CS, Software Development, Game Design) for Bengaluru's tech ecosystem. York (CS with AI &amp; Cyber Security, Creative Industries) for specialists. Bristol (Data Science, Economics &amp; Data Science) for quant roles. Surrey (AI, Cyber Security, Finance) in GIFT City.</div></div>
+    </div>
+  </div>
+
+  <div class="infobox" style="margin-top:24px;"><strong>⚠️ A note on timing:</strong> All fees and course lists are based on the latest confirmed information as of April 2026. For campuses not yet open, details are subject to change. Always verify directly with the university before applying. TNE Institute will update this page as new information becomes available.</div>
+
+  <div class="page-footer-contact">
+    Contact us: <a href="mailto:mark@tneinstitute.org">mark@tneinstitute.org</a> &nbsp;·&nbsp;
+    <a href="https://www.linkedin.com/company/tne-institute/" target="_blank">LinkedIn: TNE Institute</a>
+  </div>
+</div>
+</div>
 </body>
 </html>
