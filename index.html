@@ -81,6 +81,36 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
 .badge-qs100{display:inline-block;padding:1px 6px;border-radius:10px;font-size:11px;font-weight:700;color:#d97706;margin-left:5px;}
 .fee-tbc{color:#9ca3af;font-style:italic;}
 
+
+/* ── COMPACT LIST VIEW ── */
+.view-toggle{display:flex;gap:6px;align-items:center;}
+.view-btn{padding:5px 10px;border:1px solid #e5e7eb;border-radius:7px;background:#fff;color:#6b7280;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;}
+.view-btn.active{background:var(--ac);color:#fff;border-color:var(--ac);}
+#list-view{display:none;}
+#list-view.active{display:block;}
+#card-view.hidden{display:none;}
+.lv-table{width:100%;border-collapse:collapse;font-size:13px;}
+.lv-table thead tr{background:#f9fafb;border-bottom:2px solid #e5e7eb;}
+.lv-table th{padding:9px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#6b7280;cursor:pointer;user-select:none;white-space:nowrap;}
+.lv-table th:hover{color:var(--ac);}
+.lv-table th.sorted .lv-arr{color:var(--ac);opacity:1;}
+.lv-arr{opacity:0.35;margin-left:3px;}
+.lv-table tbody tr.lv-row{border-bottom:1px solid #f3f4f6;cursor:pointer;transition:background 0.12s;}
+.lv-table tbody tr.lv-row:hover{background:#f0fdf8;}
+.lv-table tbody tr.lv-row.lv-open{background:#f0fdf8;border-bottom:none;}
+.lv-table td{padding:10px 12px;color:#4b5563;vertical-align:middle;}
+.lv-table td.lv-name{font-weight:600;color:#1a1d2e;max-width:220px;}
+.lv-table td.lv-prog{color:#6b7280;font-size:12px;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lv-expand{width:24px;text-align:center;color:#9ca3af;font-size:11px;}
+.lv-detail{display:none;background:#f8fffe;border-bottom:2px solid #e5e7eb;}
+.lv-detail.lv-open{display:table-row;}
+.lv-detail-inner{padding:0;}
+.lv-qs{font-weight:700;color:#d97706;}
+.lv-fee{font-weight:700;color:#1a1d2e;}
+.lv-saving{color:#15803d;font-weight:600;font-size:11px;}
+.lv-badge{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;background:#f3f4f6;border:1px solid #e5e7eb;color:#4b5563;margin-left:4px;}
+.lv-star{color:#d97706;margin-left:3px;}
+
 /* HERO */
 .hbg{position:relative;overflow:hidden;background:linear-gradient(160deg,#f0fdf8 0%,#fdf2f8 50%,#eff6ff 100%);}
 .hbg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 10% 0%,rgba(0,191,165,0.08),transparent 60%),radial-gradient(ellipse 50% 40% at 90% 100%,rgba(233,30,140,0.05),transparent 55%);}
@@ -711,6 +741,10 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
         <div class="results-sub" id="rmeta">Loading...</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
+        <div class="view-toggle">
+          <button class="view-btn" id="btn-cards" onclick="switchView('cards')">&#8862; Cards</button>
+          <button class="view-btn active" id="btn-list" onclick="switchView('list')">&#9776; List</button>
+        </div>
         <select class="ssel" id="ssel" onchange="sortR()">
           <option value="match">Best Match</option>
           <option value="ca">Cost: Low to High</option>
@@ -726,18 +760,39 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
     </div>
 
     <!-- Loading state -->
-    <div id="clist">
+    <div id="card-view" style="display:none;"><div id="clist">
       <div style="text-align:center;padding:80px 20px;">
         <div style="font-size:32px;margin-bottom:16px;">⏳</div>
         <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;color:#1a1d2e;margin-bottom:8px;">Loading programmes...</div>
         <div style="font-size:13px;color:#9ca3af;">Connecting to TNE Institute database</div>
       </div>
     </div>
-  </div>
+    </div><!-- end card-view -->
 
-</div>
-
-<!-- FEATURED COURSE LISTINGS (below layout) -->
+    <!-- COMPACT LIST VIEW -->
+    <div id="list-view" style="display:block;padding:0 0 24px;">
+      <div style="overflow-x:auto;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:1px solid #e5e7eb;">
+        <table class="lv-table" id="lv-table">
+          <thead>
+            <tr>
+              <th style="width:24px;padding:9px 8px;"></th>
+              <th class="lv-th" data-sort="uni" onclick="lvSort('uni')">University <span class="lv-arr">&#8597;</span></th>
+              <th class="lv-th" data-sort="prog" onclick="lvSort('prog')">Programme <span class="lv-arr">&#8597;</span></th>
+              <th class="lv-th" data-sort="lev" onclick="lvSort('lev')">Level <span class="lv-arr">&#8597;</span></th>
+              <th class="lv-th" data-sort="co" onclick="lvSort('co')">Location <span class="lv-arr">&#8597;</span></th>
+              <th class="lv-th" data-sort="fee" onclick="lvSort('fee')">Fee/yr <span class="lv-arr">&#8597;</span></th>
+              <th class="lv-th" data-sort="qw" onclick="lvSort('qw')">QS Rank <span class="lv-arr">&#8597;</span></th>
+              <th class="lv-th" data-sort="ielts" onclick="lvSort('ielts')">IELTS <span class="lv-arr">&#8597;</span></th>
+            </tr>
+          </thead>
+          <tbody id="lv-body">
+            <tr><td colspan="8" style="text-align:center;padding:40px;color:#9ca3af;">Click &#9776; List above to load</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div><!-- end results-area -->
+</div><!-- end search-layout -->
 
   <div class="page-footer-contact">
     Contact us: <a href="mailto:mark@tneinstitute.org">mark@tneinstitute.org</a> &nbsp;·&nbsp;
@@ -1054,6 +1109,7 @@ async function initData(){
   P = SAMPLE_PROGRAMMES;
   updateCountry();
   doSearch();
+  buildListView();
   // Then try Airtable in background
   try{
     const [uniRecs, progRecs]=await Promise.all([
@@ -1143,10 +1199,12 @@ async function initData(){
     // Run initial search now data is loaded
     updateCountry();
     doSearch();
+    buildListView();
 
   }catch(err){
     console.error('Airtable load error:',err);
-    // Already showing sample data, nothing to do
+    // Already showing sample data - rebuild list view
+    buildListView();
   }
 }
 
@@ -1622,6 +1680,160 @@ function resetIndiaFilters(){
 // ── COUNTRY SPOTLIGHT FILTER ──
 function renderArt(){} // stub - articulation removed
 
+// ── COMPACT LIST VIEW ──
+let lvData = [], lvSort_key = null, lvSort_dir = 'asc', lvBuilt = false;
+const GBP_SYM = '\u00a3';
+
+function switchView(mode){
+  const cardView = document.getElementById('card-view');
+  const listView = document.getElementById('list-view');
+  const btnCards = document.getElementById('btn-cards');
+  const btnList = document.getElementById('btn-list');
+  if(!cardView||!listView) return;
+  if(mode==='cards'){
+    cardView.style.display='block';
+    listView.style.display='none';
+    if(btnCards){btnCards.classList.add('active');}
+    if(btnList){btnList.classList.remove('active');}
+  } else {
+    cardView.style.display='none';
+    listView.style.display='block';
+    if(btnList){btnList.classList.add('active');}
+    if(btnCards){btnCards.classList.remove('active');}
+    buildListView();
+  }
+}
+
+function buildListView(){
+  lvData = [...P];
+  renderListView();
+}
+
+function lvSort(key){
+  if(lvSort_key===key){ lvSort_dir = lvSort_dir==='asc'?'desc':'asc'; }
+  else { lvSort_key=key; lvSort_dir='asc'; }
+  renderListView();
+}
+
+function renderListView(){
+  const tbody = document.getElementById('lv-body');
+  if(!tbody) return;
+  let rows = [...lvData];
+
+  // Apply current filters from sidebar
+  const disc = document.getElementById('s-disc') ? document.getElementById('s-disc').value : '';
+  const lev = document.getElementById('s-lev') ? document.getElementById('s-lev').value : '';
+  const co = document.getElementById('s-country') ? document.getElementById('s-country').value : '';
+  const reg = document.getElementById('s-region') ? document.getElementById('s-region').value : '';
+  if(disc) rows = rows.filter(function(p){ return !p.disc || p.disc.toLowerCase().includes(disc.toLowerCase()); });
+  if(lev) rows = rows.filter(function(p){ return p.lev === lev; });
+  if(co) rows = rows.filter(function(p){ return p.co && p.co.toLowerCase().includes(co.toLowerCase()); });
+  if(reg) rows = rows.filter(function(p){ return p.reg && p.reg.toLowerCase().includes(reg.toLowerCase()); });
+
+  if(lvSort_key){
+    rows.sort(function(a,b){
+      let av, bv;
+      if(lvSort_key==='uni'){av=a.uni.toLowerCase();bv=b.uni.toLowerCase();}
+      else if(lvSort_key==='prog'){av=a.pg.toLowerCase();bv=b.pg.toLowerCase();}
+      else if(lvSort_key==='lev'){av=a.lev;bv=b.lev;}
+      else if(lvSort_key==='co'){av=(a.co||'').toLowerCase();bv=(b.co||'').toLowerCase();}
+      else if(lvSort_key==='fee'){av=a.fee||99999;bv=b.fee||99999;}
+      else if(lvSort_key==='qw'){av=a.qw||9999;bv=b.qw||9999;}
+      else if(lvSort_key==='ielts'){av=parseFloat(a.ielts)||9;bv=parseFloat(b.ielts)||9;}
+      if(typeof av==='string') return lvSort_dir==='asc'?av.localeCompare(bv):bv.localeCompare(av);
+      return lvSort_dir==='asc'?av-bv:bv-av;
+    });
+  }
+
+  const USD_GBP = 0.79;
+  const HOME_FEES = {
+    "Lancaster University":26000,"Middlesex University":17000,
+    "Heriot-Watt University":22000,"Coventry University":18500,
+    "University of Nottingham":27000,"De Montfort University":16500,
+    "University of Southampton":27000,"University of Birmingham":27000,
+  };
+
+  let html = '';
+  rows.forEach(function(p, i){
+    const feeGBP = p.fee ? Math.round(p.fee * USD_GBP) : null;
+    const feeStr = feeGBP ? GBP_SYM + feeGBP.toLocaleString() : '—';
+    const qsStr = p.qw ? '#' + p.qw : '—';
+    const star = (p.qw && p.qw <= 100) ? '<span class="lv-star">&#11088;</span>' : '';
+    const bg = i%2===0?'#fff':'#fafafa';
+    const rid = 'lv_'+i;
+
+    // Home campus saving
+    const lo = p.lo||'';
+    let parentName = '';
+    for(const k of Object.keys(HOME_FEES)){ if(p.uni.includes(k.split(' ').pop())) parentName=k; }
+    const homeFee = HOME_FEES[parentName];
+    const saving = homeFee && feeGBP && p.type==='TNE' ? homeFee - feeGBP : null;
+    const savingStr = saving && saving>0 ? '<span class="lv-saving"> -'+GBP_SYM+saving.toLocaleString()+'/yr</span>' : '';
+
+    // Expanded detail
+    const alStr = p.al||'See website';
+    const ibStr = p.ib ? p.ib+' pts' : '—';
+    const ieltsStr = p.ielts ? p.ielts : '—';
+    const noteStr = p.note||'';
+
+    html += '<tr class="lv-row" style="background:'+bg+'" onclick="toggleLvRow(\''+rid+'\')">'; 
+    html += '<td class="lv-expand" id="lv-arr-'+rid+'">&#9658;</td>';
+    html += '<td class="lv-name">'+p.uni+star+'</td>';
+    html += '<td class="lv-prog" title="'+p.pg+'">'+p.pg+'</td>';
+    html += '<td><span class="lv-badge">'+p.lev+'</span></td>';
+    html += '<td>'+p.fl+' '+(p.co||'')+'</td>';
+    html += '<td class="lv-fee">'+feeStr+savingStr+'</td>';
+    html += '<td class="lv-qs">'+qsStr+'</td>';
+    html += '<td>'+ieltsStr+'</td>';
+    html += '</tr>';
+
+    // Detail row
+    html += '<tr class="lv-detail" id="lv-detail-'+rid+'">';
+    html += '<td colspan="8" class="lv-detail-inner">';
+    html += '<div class="cdetail-grid">';
+    html += '<div class="cs"><div class="csl">Annual Cost</div>';
+    html += '<div class="ctot">'+(feeStr)+'<span>/yr</span></div>';
+    if(saving && saving>0) html += '<div style="color:#15803d;font-size:12px;font-weight:600;margin-top:4px;">Save '+GBP_SYM+saving.toLocaleString()+'/yr vs home campus</div>';
+    html += '</div>';
+    html += '<div class="cs"><div class="csl">QS Ranking</div>';
+    html += '<div class="rnum">'+(p.qw?'#'+p.qw:'—')+'</div>';
+    html += '<div class="rsub">'+p.uni+'</div></div>';
+    html += '<div class="cs"><div class="csl">Entry Requirements</div>';
+    html += '<div class="errows">';
+    html += '<div class="errw"><span class="erl">A-Level</span><span class="erv">'+alStr+'</span></div>';
+    html += '<div class="errw"><span class="erl">IB</span><span class="erv">'+ibStr+'</span></div>';
+    html += '<div class="errw"><span class="erl">IELTS</span><span class="erv">'+ieltsStr+'</span></div>';
+    html += '</div></div></div>';
+    if(noteStr) html += '<div class="cdetail-note">'+noteStr+'</div>';
+    html += '</td></tr>';
+  });
+
+  tbody.innerHTML = html || '<tr><td colspan="8" style="text-align:center;padding:40px;color:#9ca3af;">No results</td></tr>';
+
+  // Update sort arrows
+  document.querySelectorAll('#lv-table .lv-th').forEach(function(th){
+    th.classList.remove('sorted');
+    const arr = th.querySelector('.lv-arr');
+    if(arr) arr.textContent = '\u2195';
+    if(th.dataset.sort===lvSort_key){
+      th.classList.add('sorted');
+      if(arr) arr.textContent = lvSort_dir==='asc'?'\u2191':'\u2193';
+    }
+  });
+}
+
+function toggleLvRow(id){
+  const det = document.getElementById('lv-detail-'+id);
+  const arr = document.getElementById('lv-arr-'+id);
+  const row = det ? det.previousElementSibling : null;
+  if(!det) return;
+  const open = det.classList.contains('lv-open');
+  det.classList.toggle('lv-open');
+  if(row) row.classList.toggle('lv-open');
+  if(arr) arr.innerHTML = open ? '&#9658;' : '&#9660;';
+}
+
+
 // ── EXPANDABLE CAMPUS TABLES ──
 const CAMPUS_DATA_MAP = {"University of Birmingham Dubai": {"home": "University of Birmingham", "home_qs": 80, "home_country": "UK", "location": "Dubai International Academic City, UAE", "type": "Branch Campus", "ug_fee_gbp": 22000, "pg_fee_gbp": 26000, "al": "ABB\u2013AAB", "ib": "32\u201334", "ielts": "6.5", "programmes": "BSc Business Management, BSc Accounting & Finance, MBA, MSc Finance", "notes": "Russell Group. QS #80. TEF Gold.", "russell": true}, "Middlesex University Mauritius": {"home": "Middlesex University", "home_qs": 669, "home_country": "UK", "location": "Vacoas, Mauritius", "type": "Branch Campus", "ug_fee_gbp": 7500, "pg_fee_gbp": 9000, "al": "CCC", "ib": "24\u201326", "ielts": "6.0", "programmes": "BSc Accounting & Finance, BSc Business Management, LLB Law, BSc IT, BSc Psychology, MSc Finance", "notes": "First British university in Mauritius. Est. 2009. Inter-campus transfer to London/Dubai.", "russell": false}, "University of Nottingham Ningbo China": {"home": "University of Nottingham", "home_qs": 97, "home_country": "UK", "location": "Ningbo, China", "type": "Branch Campus", "ug_fee_gbp": 13000, "pg_fee_gbp": 14000, "al": "ABB\u2013BBB", "ib": "28\u201334", "ielts": "6.5", "programmes": "BEng/MEng Engineering, BSc Business Management, BSc Computer Science, BSc Architecture, MSc programmes", "notes": "Russell Group. First Sino-foreign university in China. Est. 2004. 9,000+ students.", "russell": true}, "University of York Europe Campus (Greece)": {"home": "University of York", "home_qs": 178, "home_country": "UK", "location": "Thessaloniki & Athens, Greece", "type": "Branch Campus", "ug_fee_gbp": 6200, "pg_fee_gbp": 9000, "al": "BCC\u2013ABB", "ib": "See website", "ielts": "6.0", "programmes": "BA English Studies, BSc Psychology, BSc Business Administration, BSc Economics, BSc Computer Science, LLB Law (Thessaloniki)", "notes": "Est. 2021 (formerly CITY College). Covers 7 countries in SE Europe. EU employment access.", "russell": false}, "University of Southampton Delhi": {"home": "University of Southampton", "home_qs": 81, "home_country": "UK", "location": "Gurugram, Haryana, India", "type": "Branch Campus", "ug_fee_gbp": 13500, "pg_fee_gbp": 17000, "al": "ABB", "ib": "33", "ielts": "6.5", "programmes": "BSc Business Management, BSc Computer Science, BSc Accounting & Finance, BSc Economics, BSc Creative Computing, BEng Software Engineering, MSc Finance, MSc International Management, MSc Economics, MSc Data Science", "notes": "Russell Group. First UK university open in India under UGC 2023. Est. 2025.", "russell": true}, "University of Liverpool Bengaluru": {"home": "University of Liverpool", "home_qs": 147, "home_country": "UK", "location": "Whitefield, Bengaluru, India", "type": "Branch Campus", "ug_fee_gbp": 9100, "pg_fee_gbp": null, "al": "BBB", "ib": "30", "ielts": "6.0", "programmes": "BSc Computer Science, BSc Software Development, BSc Business Management, BSc Accounting & Finance, BSc Biomedical Sciences, BSc Game Design", "notes": "Russell Group. TEF Gold. Final year at Liverpool UK included in tuition. Opening 2026.", "russell": true}, "University of Bristol Mumbai": {"home": "University of Bristol", "home_qs": 54, "home_country": "UK", "location": "Mumbai, India", "type": "Branch Campus", "ug_fee_gbp": 12600, "pg_fee_gbp": 15800, "al": "ABB\u2013AAB", "ib": "34\u201336", "ielts": "6.5", "programmes": "BSc Data Science, BSc Economics, BSc Economics and Data Science, MSc FinTech with Data Science, MSc Finance & Investment, MA Immersive Arts", "notes": "Russell Group. QS #54 globally. Think Big India Scholarships available. Opening 2026.", "russell": true}, "University of York, Navi Mumbai": {"home": "University of York", "home_qs": 178, "home_country": "UK", "location": "Navi Mumbai, India", "type": "Branch Campus", "ug_fee_gbp": 9900, "pg_fee_gbp": 13400, "al": "BBB", "ib": "30", "ielts": "6.0", "programmes": "BSc Computer Science with AI & Cyber Security, BSc Business, BSc Economics, BA Creative Industries, MSc Management, MSc Finance, MSc Artificial Intelligence", "notes": "Opening late 2026. Letter of Intent received.", "russell": false}, "University of Aberdeen, India": {"home": "University of Aberdeen", "home_qs": 396, "home_country": "UK", "location": "Navi Mumbai, India", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": null, "al": "See website", "ib": "See website", "ielts": "See website", "programmes": "Energy, Law, Business, Engineering (TBC)", "notes": "Scotland's first university in India. Opening 2027. LoI received June 2025.", "russell": false}, "Lancaster University Bengaluru": {"home": "Lancaster University", "home_qs": 209, "home_country": "UK", "location": "Bengaluru, India", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": null, "al": "See website", "ib": "See website", "ielts": "See website", "programmes": "Business, Technology, Management (TBC)", "notes": "Approved October 2025. Opening 2026\u201327.", "russell": false}, "University of Surrey, GIFT City": {"home": "University of Surrey", "home_qs": 340, "home_country": "UK", "location": "GIFT City, Gujarat, India", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": null, "al": "See website", "ib": "See website", "ielts": "See website", "programmes": "Finance, AI, Cyber Security (TBC)", "notes": "GIFT City special economic zone. Opening 2026\u201327.", "russell": false}, "Queen's University Belfast, GIFT City": {"home": "Queen's University Belfast", "home_qs": 232, "home_country": "UK", "location": "GIFT City, Gujarat, India", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": null, "al": "See website", "ib": "See website", "ielts": "See website", "programmes": "Law, Business, Technology, Engineering (TBC)", "notes": "Russell Group. Opening 2026.", "russell": true}, "Coventry University, GIFT City": {"home": "Coventry University", "home_qs": 668, "home_country": "UK", "location": "GIFT City, Gujarat, India", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": null, "al": "See website", "ib": "See website", "ielts": "See website", "programmes": "Business, Engineering, Computing (TBC)", "notes": "Opening 2026\u201327.", "russell": false}, "Deakin University, GIFT City": {"home": "Deakin University", "home_qs": 284, "home_country": "Australia", "location": "GIFT City, Gujarat, India", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": null, "al": "See website", "ib": "See website", "ielts": "See website", "programmes": "Business, Technology (TBC)", "notes": "First Australian university in India. Opening 2026.", "russell": false}, "University of Wollongong, India": {"home": "University of Wollongong", "home_qs": 218, "home_country": "Australia", "location": "India (TBC)", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": null, "al": "See website", "ib": "See website", "ielts": "See website", "programmes": "TBC", "notes": "Confirmed presence in India. Details TBC.", "russell": false}, "SDA Bocconi Asia Center": {"home": "Bocconi University", "home_qs": 299, "home_country": "Italy", "location": "Mumbai, India", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 28000, "al": "N/A", "ib": "N/A", "ielts": "6.5", "programmes": "MBA, MSc Finance, Executive programmes", "notes": "Graduate-only. Top European business school.", "russell": false}, "INSEAD Asia": {"home": "INSEAD", "home_qs": null, "home_country": "France", "location": "One-North, Singapore", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 86000, "al": "N/A", "ib": "N/A", "ielts": "7.5", "programmes": "MBA (10 months), Master in Management (MIM), Executive MBA, PhD", "notes": "QS #1 globally for MBA. Graduate-only. GMAT required (avg ~710).", "russell": false, "qs_label": "#1 QS MBA Ranking"}, "ESSEC Business School Asia Pacific": {"home": "ESSEC Business School", "home_qs": 94, "home_country": "France", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 40000, "al": "N/A", "ib": "N/A", "ielts": "6.5", "programmes": "MBA Asia-Pacific, MSc in Management, Executive programmes", "notes": "QS #94 globally. Graduate-only.", "russell": false, "qs_label": "#94 QS World"}, "EDHEC Business School Singapore": {"home": "EDHEC Business School", "home_qs": null, "home_country": "France", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 35000, "al": "N/A", "ib": "N/A", "ielts": "6.5", "programmes": "Global MBA, MSc Finance, MSc Business Analytics", "notes": "QS #44 for Business globally. Graduate-only.", "russell": false, "qs_label": "Top 10 FT Europe"}, "TUM Asia": {"home": "Technical University of Munich", "home_qs": 37, "home_country": "Germany", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 15800, "al": "N/A", "ib": "N/A", "ielts": "6.5", "programmes": "MSc Industrial Chemistry, MSc Aerospace Engineering, MSc Electrical Engineering & IT, MSc Mechatronics, MSc Sustainable Water Engineering", "notes": "QS #37 globally. Engineering & technology specialist. Graduate-only.", "russell": false}, "Curtin Singapore": {"home": "Curtin University", "home_qs": 185, "home_country": "Australia", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": 12000, "pg_fee_gbp": 16000, "al": "BCC", "ib": "26", "ielts": "6.0", "programmes": "BSc Business, BSc Accounting, BSc Marketing, BSc Computing, BEng Engineering", "notes": "Established 1986. One of Singapore's oldest international campuses.", "russell": false}, "JCU Singapore": {"home": "James Cook University", "home_qs": 401, "home_country": "Australia", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": 14000, "pg_fee_gbp": 18000, "al": "BCC", "ib": "26", "ielts": "6.0", "programmes": "BSc Psychology, BSc Business, MBA, MSc Psychology, MSc Data Science", "notes": "Strong psychology and marine biology programmes.", "russell": false}, "Murdoch University Singapore": {"home": "Murdoch University", "home_qs": 499, "home_country": "Australia", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": 13000, "pg_fee_gbp": 17000, "al": "CCC", "ib": "24", "ielts": "6.0", "programmes": "BSc Business, BSc IT, BSc Mass Communication, MBA, MSc Business", "notes": "", "russell": false}, "University of Newcastle International Singapore": {"home": "University of Newcastle Australia", "home_qs": 197, "home_country": "Australia", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": 14000, "pg_fee_gbp": 18000, "al": "BCC", "ib": "26", "ielts": "6.0", "programmes": "BSc Business, BSc IT, MBA, MSc Engineering Management", "notes": "", "russell": false}, "SP Jain School of Global Management Singapore": {"home": "SP Jain Centre of Management", "home_qs": null, "home_country": "India", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 28000, "al": "N/A", "ib": "N/A", "ielts": "6.0", "programmes": "Global MBA, BBA, MSc Business Analytics", "notes": "Multi-campus: Dubai, Singapore, Sydney, Mumbai. Graduate/UG.", "russell": false}, "Amity University Singapore": {"home": "Amity University", "home_qs": null, "home_country": "India", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": 12000, "pg_fee_gbp": 15000, "al": "CCC", "ib": "24", "ielts": "6.0", "programmes": "BBA, BSc IT, MBA, MSc Business Analytics", "notes": "", "russell": false}, "SJTU Graduate School Singapore": {"home": "Shanghai Jiao Tong University", "home_qs": 51, "home_country": "China", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 25000, "al": "N/A", "ib": "N/A", "ielts": "6.5", "programmes": "MSc Finance, MSc Business Analytics, MBA", "notes": "QS #51 globally. Graduate-only.", "russell": false}, "University of Glasgow Singapore": {"home": "University of Glasgow", "home_qs": 76, "home_country": "UK", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 22000, "al": "N/A", "ib": "N/A", "ielts": "6.5", "programmes": "MSc Finance, MSc Management, MSc International Business", "notes": "Russell Group. QS #76. Graduate-only via Singapore campus.", "russell": true}, "Manchester Business School Singapore": {"home": "University of Manchester", "home_qs": 52, "home_country": "UK", "location": "Singapore", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 42000, "al": "N/A", "ib": "N/A", "ielts": "6.5", "programmes": "MBA, Executive MBA", "notes": "Russell Group. QS #52. Graduate-only.", "russell": true}, "University of Nottingham Malaysia": {"home": "University of Nottingham", "home_qs": 97, "home_country": "UK", "location": "Semenyih, Selangor, Malaysia", "type": "Branch Campus", "ug_fee_gbp": 10000, "pg_fee_gbp": 13000, "al": "ABB", "ib": "32", "ielts": "6.5", "programmes": "BEng Civil/Mechanical/Chemical Engineering, BSc Computer Science, BSc Business, BSc Accounting, BPharm, MBA, MSc Finance", "notes": "Russell Group. First UK branch campus in the world. Est. 2000.", "russell": true}, "Heriot-Watt University Malaysia": {"home": "Heriot-Watt University", "home_qs": 287, "home_country": "UK", "location": "Putrajaya, Malaysia", "type": "Branch Campus", "ug_fee_gbp": 9000, "pg_fee_gbp": 12000, "al": "ABB", "ib": "32", "ielts": "6.0", "programmes": "BSc Actuarial Science, BEng Engineering (Civil/Chemical/Electrical/Mechanical), BSc Business, BSc Accounting, MSc Finance", "notes": "Est. 2013. Inter-campus transfer guaranteed via Go Global programme.", "russell": false}, "University of Reading Malaysia": {"home": "University of Reading", "home_qs": 223, "home_country": "UK", "location": "Iskandar Puteri, Johor, Malaysia", "type": "Branch Campus", "ug_fee_gbp": 9500, "pg_fee_gbp": 13000, "al": "BBB", "ib": "30", "ielts": "6.0", "programmes": "BSc Business & Management, BSc Accounting, BSc Finance, BSc Marketing, BSc Real Estate, MSc Finance, MSc International Business", "notes": "Est. 2015. Malaysia campus offers same degrees as Reading UK.", "russell": false}, "University of Southampton Malaysia": {"home": "University of Southampton", "home_qs": 81, "home_country": "UK", "location": "Johor Bahru, Malaysia", "type": "Branch Campus", "ug_fee_gbp": 9000, "pg_fee_gbp": null, "al": "ABB", "ib": "33", "ielts": "6.5", "programmes": "BEng/MEng Engineering programmes (Electronics, Electrical, Mechanical)", "notes": "Russell Group. Engineering specialist campus.", "russell": true}, "Newcastle University Medicine Malaysia": {"home": "Newcastle University", "home_qs": 130, "home_country": "UK", "location": "Johor Bahru, Malaysia", "type": "Branch Campus", "ug_fee_gbp": 22000, "pg_fee_gbp": null, "al": "AAA", "ib": "38", "ielts": "7.0", "programmes": "MBBS Medicine (5 years)", "notes": "Russell Group. Medicine specialist. Same curriculum as Newcastle UK.", "russell": true}, "Lancaster University Malaysia": {"home": "Lancaster University", "home_qs": 209, "home_country": "UK", "location": "Iskandar Puteri, Johor, Malaysia", "type": "Branch Campus", "ug_fee_gbp": 9000, "pg_fee_gbp": 12000, "al": "BBB", "ib": "30", "ielts": "6.0", "programmes": "BSc Business Management, BSc Marketing, BEng Engineering, BSc Finance, MSc Management", "notes": "Est. 2013. MQA-accredited.", "russell": false}, "Monash University Malaysia": {"home": "Monash University", "home_qs": 57, "home_country": "Australia", "location": "Subang Jaya, Selangor, Malaysia", "type": "Branch Campus", "ug_fee_gbp": 11000, "pg_fee_gbp": 15000, "al": "ABB", "ib": "30", "ielts": "6.0", "programmes": "BSc Business, BEng Engineering, BSc IT, BSc Arts & Social Sciences, BSc Science, MBA, MSc IT", "notes": "QS #57. Est. 1998. One of the oldest Australian branch campuses.", "russell": false}, "Curtin University Miri": {"home": "Curtin University", "home_qs": 185, "home_country": "Australia", "location": "Miri, Sarawak, Malaysia", "type": "Branch Campus", "ug_fee_gbp": 8000, "pg_fee_gbp": 11000, "al": "BCC", "ib": "26", "ielts": "6.0", "programmes": "BEng Petroleum Engineering, BSc Business, BSc Engineering, BSc IT", "notes": "Est. 1999. Strong petroleum engineering \u2014 aligned with Sarawak's oil industry.", "russell": false}, "Swinburne University of Technology Sarawak": {"home": "Swinburne University of Technology", "home_qs": 364, "home_country": "Australia", "location": "Kuching, Sarawak, Malaysia", "type": "Branch Campus", "ug_fee_gbp": 7500, "pg_fee_gbp": 10000, "al": "BCC", "ib": "26", "ielts": "6.0", "programmes": "BEng Engineering, BSc IT, BSc Business, BSc Design", "notes": "Est. 2000.", "russell": false}, "Xiamen University Malaysia": {"home": "Xiamen University", "home_qs": 330, "home_country": "China", "location": "Sepang, Selangor, Malaysia", "type": "Branch Campus", "ug_fee_gbp": 5000, "pg_fee_gbp": 7000, "al": "See website", "ib": "See website", "ielts": "5.5", "programmes": "BSc Economics, BSc Finance, BSc Business, BSc IT, BSc Arts", "notes": "First Chinese university branch campus outside China. Est. 2016.", "russell": false}, "Tsukuba University Malaysia": {"home": "University of Tsukuba", "home_qs": 352, "home_country": "Japan", "location": "Malaysia", "type": "Branch Campus", "ug_fee_gbp": 6000, "pg_fee_gbp": null, "al": "See website", "ib": "See website", "ielts": "5.5", "programmes": "BSc Information & Library Science", "notes": "", "russell": false}, "Coventry University Egypt (TKH)": {"home": "Coventry University", "home_qs": 668, "home_country": "UK", "location": "New Administrative Capital, Cairo, Egypt", "type": "Branch Campus", "ug_fee_gbp": 5000, "pg_fee_gbp": null, "al": "CCC", "ib": "26", "ielts": "6.0", "programmes": "BEng Engineering, BSc Computer Science, BSc Business Management", "notes": "Via The Knowledge Hub. Same UK degree.", "russell": false}, "University of Hertfordshire Egypt": {"home": "University of Hertfordshire", "home_qs": 801, "home_country": "UK", "location": "Egypt", "type": "Branch Campus", "ug_fee_gbp": 4500, "pg_fee_gbp": null, "al": "CCC", "ib": "24", "ielts": "5.5", "programmes": "BSc Business, BSc IT, BSc Engineering", "notes": "", "russell": false}, "Technical University of Berlin, El Gouna": {"home": "Technical University of Berlin", "home_qs": 154, "home_country": "Germany", "location": "El Gouna, Red Sea, Egypt", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 7000, "al": "N/A", "ib": "N/A", "ielts": "6.5", "programmes": "MSc Urban Development, MSc Water Engineering, MSc Resource Efficiency in Architecture, MSc Tourism Development", "notes": "QS #154. Graduate-only. Unique Red Sea location. Sustainability focus.", "russell": false}, "University of Prince Edward Island Cairo": {"home": "University of Prince Edward Island", "home_qs": null, "home_country": "Canada", "location": "Cairo, Egypt", "type": "Branch Campus", "ug_fee_gbp": 5500, "pg_fee_gbp": null, "al": "CCC", "ib": "26", "ielts": "6.0", "programmes": "BSc Business Administration, BSc Computer Science", "notes": "", "russell": false}, "NOVA University Egypt": {"home": "NOVA University Lisbon", "home_qs": 303, "home_country": "Portugal", "location": "Egypt", "type": "Branch Campus", "ug_fee_gbp": 4500, "pg_fee_gbp": 7000, "al": "See website", "ib": "See website", "ielts": "6.0", "programmes": "BSc Economics, BSc Management, MBA", "notes": "", "russell": false}, "St Petersburg University Cairo": {"home": "St Petersburg University", "home_qs": 242, "home_country": "Russia", "location": "Cairo, Egypt", "type": "Branch Campus", "ug_fee_gbp": 3500, "pg_fee_gbp": 5000, "al": "See website", "ib": "See website", "ielts": "See website", "programmes": "BSc Oriental Studies, BSc Economics, BSc International Relations", "notes": "", "russell": false}, "Heriot-Watt University Dubai": {"home": "Heriot-Watt University", "home_qs": 287, "home_country": "UK", "location": "Dubai Knowledge Park, UAE", "type": "Branch Campus", "ug_fee_gbp": 16000, "pg_fee_gbp": 21000, "al": "BBB", "ib": "30", "ielts": "6.0", "programmes": "BEng Engineering (Mechanical/Electrical/Civil/Energy), BSc Business, BSc Actuarial Science, BSc CS, MSc Finance, MSc Data Science", "notes": "First UK university in Dubai International Academic City. Est. 2005.", "russell": false}, "Middlesex University Dubai": {"home": "Middlesex University", "home_qs": 669, "home_country": "UK", "location": "Dubai Knowledge Park, UAE", "type": "Branch Campus", "ug_fee_gbp": 14000, "pg_fee_gbp": 19000, "al": "BCC", "ib": "28", "ielts": "6.0", "programmes": "BSc Business, BSc Accounting, BSc Psychology, BSc CS, LLB Law, BSc Engineering, MBA, MSc Finance", "notes": "Largest UK university in Dubai. 5,600+ students.", "russell": false}, "De Montfort University Dubai": {"home": "De Montfort University", "home_qs": 801, "home_country": "UK", "location": "Dubai, UAE", "type": "Branch Campus", "ug_fee_gbp": 14000, "pg_fee_gbp": 18000, "al": "BCC", "ib": "28", "ielts": "6.0", "programmes": "BSc Business Management, BEng Engineering, BSc Computing, MBA", "notes": "", "russell": false}, "University of Wollongong in Dubai": {"home": "University of Wollongong", "home_qs": 218, "home_country": "Australia", "location": "Dubai Knowledge Park, UAE", "type": "Branch Campus", "ug_fee_gbp": 13000, "pg_fee_gbp": 17000, "al": "BCC", "ib": "26", "ielts": "6.0", "programmes": "BSc Business, BSc IT, BSc Engineering, BSc Health Sciences, MBA, MSc Finance", "notes": "Est. 1993. One of the oldest branch campuses in UAE.", "russell": false}, "Curtin University Dubai": {"home": "Curtin University", "home_qs": 185, "home_country": "Australia", "location": "Dubai, UAE", "type": "Branch Campus", "ug_fee_gbp": 12000, "pg_fee_gbp": 16000, "al": "BCC", "ib": "26", "ielts": "6.0", "programmes": "BSc Business, BSc IT, BSc Engineering, BSc Accounting", "notes": "", "russell": false}, "Murdoch University Dubai": {"home": "Murdoch University", "home_qs": 499, "home_country": "Australia", "location": "Dubai, UAE", "type": "Branch Campus", "ug_fee_gbp": 12000, "pg_fee_gbp": 16000, "al": "CCC", "ib": "24", "ielts": "6.0", "programmes": "BSc Business, BSc IT, BSc Mass Communication", "notes": "", "russell": false}, "INSEAD Abu Dhabi": {"home": "INSEAD", "home_qs": null, "home_country": "France", "location": "Abu Dhabi, UAE", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 86000, "al": "N/A", "ib": "N/A", "ielts": "7.5", "programmes": "Executive MBA, MBA (Middle East section)", "notes": "QS #1 MBA globally. Graduate-only.", "russell": false, "qs_label": "#1 QS MBA Ranking"}, "Paris Sorbonne Abu Dhabi": {"home": "Sorbonne University", "home_qs": 75, "home_country": "France", "location": "Abu Dhabi, UAE", "type": "Branch Campus", "ug_fee_gbp": 10000, "pg_fee_gbp": 14000, "al": "See website", "ib": "See website", "ielts": "6.0", "programmes": "BA French Studies, BA Arab Studies, BA History, BA Philosophy, MSc programmes", "notes": "QS #75. Unique French-language curriculum in the Gulf.", "russell": false}, "HEC Paris Qatar": {"home": "HEC Paris", "home_qs": null, "home_country": "France", "location": "Doha, Qatar", "type": "Branch Campus", "ug_fee_gbp": null, "pg_fee_gbp": 52000, "al": "N/A", "ib": "N/A", "ielts": "7.0", "programmes": "Executive MBA, MSc Sustainability & Social Innovation", "notes": "QS #22 for Business. Graduate/Executive only.", "russell": false, "qs_label": "Top 10 QS MBA"}, "IIT Delhi Abu Dhabi": {"home": "IIT Delhi", "home_qs": 150, "home_country": "India", "location": "Abu Dhabi, UAE", "type": "Branch Campus", "ug_fee_gbp": 13000, "pg_fee_gbp": 15000, "al": "N/A", "ib": "N/A", "ielts": "6.5", "programmes": "BTech Computer Science, BTech Electrical Engineering, MTech programmes", "notes": "First IIT outside India. QS #150.", "russell": false}, "Amity University Dubai": {"home": "Amity University", "home_qs": null, "home_country": "India", "location": "Dubai, UAE", "type": "Branch Campus", "ug_fee_gbp": 9000, "pg_fee_gbp": 12000, "al": "CCC", "ib": "24", "ielts": "5.5", "programmes": "BBA, BSc IT, BSc Engineering, MBA", "notes": "", "russell": false}, "Manipal University Dubai": {"home": "Manipal University", "home_qs": null, "home_country": "India", "location": "Dubai, UAE", "type": "Branch Campus", "ug_fee_gbp": 8500, "pg_fee_gbp": 11000, "al": "CCC", "ib": "24", "ielts": "5.5", "programmes": "BSc Engineering, BSc Business, BSc IT, BSc Media", "notes": "", "russell": false}, "RCSI Bahrain": {"home": "Royal College of Surgeons in Ireland", "home_qs": 356, "home_country": "Ireland", "location": "Manama, Bahrain", "type": "Branch Campus", "ug_fee_gbp": 22000, "pg_fee_gbp": 25000, "al": "AAB", "ib": "36", "ielts": "7.0", "programmes": "MBBS Medicine, BSc Nursing, BSc Pharmacy, MSc Surgical Sciences", "notes": "Medicine & health specialist.", "russell": false}, "GUtech Oman": {"home": "RWTH Aachen University", "home_qs": 106, "home_country": "Germany", "location": "Muscat, Oman", "type": "Branch Campus", "ug_fee_gbp": 8000, "pg_fee_gbp": 11000, "al": "BBB", "ib": "30", "ielts": "6.0", "programmes": "BEng Mechanical Engineering, BEng Process & Chemical Engineering, BSc CS, BSc Urban Planning, MSc Engineering", "notes": "German University of Technology in Oman. Academic partner: RWTH Aachen QS #106.", "russell": false}, "Stenden University Qatar": {"home": "NHL Stenden University", "home_qs": null, "home_country": "Netherlands", "location": "Doha, Qatar", "type": "Branch Campus", "ug_fee_gbp": 7000, "pg_fee_gbp": null, "al": "CCC", "ib": "26", "ielts": "6.0", "programmes": "BSc Hospitality Management, BSc Tourism Management, BSc Business", "notes": "Hospitality and tourism specialist.", "russell": false}, "RMIT University Vietnam Hanoi": {"home": "RMIT University", "home_qs": 130, "home_country": "Australia", "location": "Hanoi, Vietnam", "type": "Branch Campus", "ug_fee_gbp": 7000, "pg_fee_gbp": 11000, "al": "BCC", "ib": "26", "ielts": "6.0", "programmes": "BSc Business, BSc IT, BSc Design, BSc Communication, MBA", "notes": "QS #130. Same degree as Melbourne. Est. 2000.", "russell": false}, "RMIT University Vietnam Ho Chi Minh City": {"home": "RMIT University", "home_qs": 130, "home_country": "Australia", "location": "Ho Chi Minh City, Vietnam", "type": "Branch Campus", "ug_fee_gbp": 7000, "pg_fee_gbp": 11000, "al": "BCC", "ib": "26", "ielts": "6.0", "programmes": "BSc Business, BSc IT, BSc Design, BSc Engineering, BSc Communication, MBA", "notes": "QS #130. Same degree as Melbourne. Main Vietnam campus.", "russell": false}, "Universit\u00e9 du Qu\u00e9bec Vietnam": {"home": "Universit\u00e9 du Qu\u00e9bec \u00e0 Montr\u00e9al", "home_qs": null, "home_country": "Canada", "location": "Vietnam", "type": "Branch Campus", "ug_fee_gbp": 5000, "pg_fee_gbp": 7000, "al": "See website", "ib": "See website", "ielts": "See website", "programmes": "BSc Business Administration, MBA", "notes": "", "russell": false}, "Monash University Indonesia": {"home": "Monash University", "home_qs": 57, "home_country": "Australia", "location": "BSD City, Banten, Indonesia", "type": "Branch Campus", "ug_fee_gbp": 9000, "pg_fee_gbp": 14000, "al": "ABB", "ib": "30", "ielts": "6.5", "programmes": "BSc Business, BSc IT, BSc Social Sciences, MBA, MSc IT", "notes": "QS #57. Purpose-built campus. Est. 2021.", "russell": false}, "Deakin University Lancaster University Indonesia": {"home": "Deakin University / Lancaster University", "home_qs": 284, "home_country": "Australia/UK", "location": "Bandung, Indonesia", "type": "Branch Campus", "ug_fee_gbp": 7000, "pg_fee_gbp": null, "al": "BCC", "ib": "28", "ielts": "6.0", "programmes": "BSc Business Management, BEng Engineering, BSc IT", "notes": "Joint venture. Both Deakin (QS #284) and Lancaster (QS #209) degrees available.", "russell": false}, "ESMOD Jakarta": {"home": "ESMOD Paris", "home_qs": null, "home_country": "France", "location": "Jakarta, Indonesia", "type": "Branch Campus", "ug_fee_gbp": 8000, "pg_fee_gbp": null, "al": "See website", "ib": "See website", "ielts": "See website", "programmes": "BA Fashion Design, BA Fashion Marketing & Management", "notes": "World-leading fashion school. French methodology.", "russell": false}, "Universitas Triatma Mulya Stenden": {"home": "NHL Stenden University", "home_qs": null, "home_country": "Netherlands", "location": "Bali, Indonesia", "type": "Branch Campus", "ug_fee_gbp": 5500, "pg_fee_gbp": null, "al": "CCC", "ib": "24", "ielts": "5.5", "programmes": "BSc International Hospitality Management, BSc Tourism", "notes": "Hospitality specialist in Bali. Dutch degree.", "russell": false}};
 
@@ -1662,6 +1874,7 @@ function buildCampusTable(pageId, campusNames){
         else if(sortKey==='name'){av=a.name.toLowerCase();bv=b.name.toLowerCase();}
         else if(sortKey==='country'){av=a.d.home_country.toLowerCase();bv=b.d.home_country.toLowerCase();}
         else if(sortKey==='ielts'){av=parseFloat(a.d.ielts)||9;bv=parseFloat(b.d.ielts)||9;}
+        else if(sortKey==='location'){av=(a.d.location||'').toLowerCase();bv=(b.d.location||'').toLowerCase();}
         if(typeof av==='string') return sortDir==='asc'?av.localeCompare(bv):bv.localeCompare(av);
         return sortDir==='asc'?av-bv:bv-av;
       });
@@ -2334,7 +2547,7 @@ window.addEventListener("load",()=>{initData();if(window._campusTableInits)windo
           <th data-sort="name" onclick="ctSort_india('name')">Campus <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="name" onclick="ctSort_india('name')">Home University <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="country" onclick="ctSort_india('country')">Home Country <span class="sort-arrow">&#8597;</span></th>
-          <th>Location</th>
+          <th data-sort="location" onclick="ctSort_india('location')">Location <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="fee" onclick="ctSort_india('fee')">From (GBP) <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="qs" onclick="ctSort_india('qs')">QS World Rank<br><span style="font-size:9px;font-weight:400;color:#9ca3af;">(parent university)</span> <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="ielts" onclick="ctSort_india('ielts')">IELTS <span class="sort-arrow">&#8597;</span></th>
@@ -2414,7 +2627,7 @@ window.addEventListener("load",()=>{initData();if(window._campusTableInits)windo
           <th data-sort="name" onclick="ctSort_singapore('name')">Campus <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="name" onclick="ctSort_singapore('name')">Home University <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="country" onclick="ctSort_singapore('country')">Home Country <span class="sort-arrow">&#8597;</span></th>
-          <th>Location</th>
+          <th data-sort="location" onclick="ctSort_singapore('location')">Location <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="fee" onclick="ctSort_singapore('fee')">From (GBP) <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="qs" onclick="ctSort_singapore('qs')">QS World Rank<br><span style="font-size:9px;font-weight:400;color:#9ca3af;">(parent university)</span> <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="ielts" onclick="ctSort_singapore('ielts')">IELTS <span class="sort-arrow">&#8597;</span></th>
@@ -2494,7 +2707,7 @@ window.addEventListener("load",()=>{initData();if(window._campusTableInits)windo
           <th data-sort="name" onclick="ctSort_malaysia('name')">Campus <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="name" onclick="ctSort_malaysia('name')">Home University <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="country" onclick="ctSort_malaysia('country')">Home Country <span class="sort-arrow">&#8597;</span></th>
-          <th>Location</th>
+          <th data-sort="location" onclick="ctSort_malaysia('location')">Location <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="fee" onclick="ctSort_malaysia('fee')">From (GBP) <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="qs" onclick="ctSort_malaysia('qs')">QS World Rank<br><span style="font-size:9px;font-weight:400;color:#9ca3af;">(parent university)</span> <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="ielts" onclick="ctSort_malaysia('ielts')">IELTS <span class="sort-arrow">&#8597;</span></th>
@@ -2574,7 +2787,7 @@ window.addEventListener("load",()=>{initData();if(window._campusTableInits)windo
           <th data-sort="name" onclick="ctSort_egypt('name')">Campus <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="name" onclick="ctSort_egypt('name')">Home University <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="country" onclick="ctSort_egypt('country')">Home Country <span class="sort-arrow">&#8597;</span></th>
-          <th>Location</th>
+          <th data-sort="location" onclick="ctSort_egypt('location')">Location <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="fee" onclick="ctSort_egypt('fee')">From (GBP) <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="qs" onclick="ctSort_egypt('qs')">QS World Rank<br><span style="font-size:9px;font-weight:400;color:#9ca3af;">(parent university)</span> <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="ielts" onclick="ctSort_egypt('ielts')">IELTS <span class="sort-arrow">&#8597;</span></th>
@@ -2654,7 +2867,7 @@ window.addEventListener("load",()=>{initData();if(window._campusTableInits)windo
           <th data-sort="name" onclick="ctSort_gcc('name')">Campus <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="name" onclick="ctSort_gcc('name')">Home University <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="country" onclick="ctSort_gcc('country')">Home Country <span class="sort-arrow">&#8597;</span></th>
-          <th>Location</th>
+          <th data-sort="location" onclick="ctSort_gcc('location')">Location <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="fee" onclick="ctSort_gcc('fee')">From (GBP) <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="qs" onclick="ctSort_gcc('qs')">QS World Rank<br><span style="font-size:9px;font-weight:400;color:#9ca3af;">(parent university)</span> <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="ielts" onclick="ctSort_gcc('ielts')">IELTS <span class="sort-arrow">&#8597;</span></th>
@@ -2734,7 +2947,7 @@ window.addEventListener("load",()=>{initData();if(window._campusTableInits)windo
           <th data-sort="name" onclick="ctSort_vietnam('name')">Campus <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="name" onclick="ctSort_vietnam('name')">Home University <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="country" onclick="ctSort_vietnam('country')">Home Country <span class="sort-arrow">&#8597;</span></th>
-          <th>Location</th>
+          <th data-sort="location" onclick="ctSort_vietnam('location')">Location <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="fee" onclick="ctSort_vietnam('fee')">From (GBP) <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="qs" onclick="ctSort_vietnam('qs')">QS World Rank<br><span style="font-size:9px;font-weight:400;color:#9ca3af;">(parent university)</span> <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="ielts" onclick="ctSort_vietnam('ielts')">IELTS <span class="sort-arrow">&#8597;</span></th>
@@ -2814,7 +3027,7 @@ window.addEventListener("load",()=>{initData();if(window._campusTableInits)windo
           <th data-sort="name" onclick="ctSort_indonesia('name')">Campus <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="name" onclick="ctSort_indonesia('name')">Home University <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="country" onclick="ctSort_indonesia('country')">Home Country <span class="sort-arrow">&#8597;</span></th>
-          <th>Location</th>
+          <th data-sort="location" onclick="ctSort_indonesia('location')">Location <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="fee" onclick="ctSort_indonesia('fee')">From (GBP) <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="qs" onclick="ctSort_indonesia('qs')">QS World Rank<br><span style="font-size:9px;font-weight:400;color:#9ca3af;">(parent university)</span> <span class="sort-arrow">&#8597;</span></th>
           <th data-sort="ielts" onclick="ctSort_indonesia('ielts')">IELTS <span class="sort-arrow">&#8597;</span></th>
