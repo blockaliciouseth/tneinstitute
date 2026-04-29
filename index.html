@@ -124,7 +124,136 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
 .ad-panel-sub{font-size:11px;color:#6b7280;line-height:1.4;margin-bottom:8px;}
 .ad-panel-cta{display:inline-block;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:700;background:var(--ac);color:#fff;}
 .ad-label{font-size:9px;color:#d1d5db;text-align:center;padding:4px 0;letter-spacing:0.05em;text-transform:uppercase;}
-@media(max-width:900px){.search-outer{grid-template-columns:1fr;}.ad-col{display:none;}}
+
+/* ══════════════════════════════════════
+   MOBILE RESPONSIVE — max-width: 768px
+══════════════════════════════════════ */
+@media(max-width:768px){
+
+  /* ── NAV ── */
+  .topnav{min-height:56px;padding:0 12px;flex-wrap:nowrap;gap:6px;}
+  .logo img{height:40px !important;}
+  .nav-links{gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;}
+  .nl{font-size:11px;padding:5px 7px;white-space:nowrap;}
+  .nav-dropdown .nav-drop-menu{position:fixed;left:8px;right:8px;min-width:unset;z-index:300;}
+
+  /* ── HERO BANNER — stack ads below text on mobile ── */
+  .hbg > div[style*="grid-template-columns:140px"]{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  .hbg > div > div:first-child,
+  .hbg > div > div:last-child{
+    display:none !important;
+  }
+  .hc{padding:20px 16px 16px !important;}
+  .htitle{font-size:22px !important;}
+  .hsub{font-size:12px !important;max-width:100% !important;}
+  .hbadge{font-size:10px;}
+
+  /* ── PROMOTIONAL BANNER ── */
+  .hbg + div[style*="background:linear-gradient"]{display:none;}
+
+  /* ── SEARCH LAYOUT — stack sidebar above results ── */
+  .search-layout{grid-template-columns:1fr !important;grid-template-rows:auto 1fr;}
+  .sidebar{
+    position:static !important;
+    max-height:none !important;
+    border-right:none !important;
+    border-bottom:1px solid #e5e7eb;
+    padding:12px 16px !important;
+  }
+  /* Collapse sidebar sections by default on mobile */
+  .sidebar-section{margin-bottom:8px;}
+  .sidebar-title{font-size:12px;}
+  .results-area{padding:12px 12px !important;}
+  .results-topbar{flex-wrap:wrap;gap:8px;}
+  .results-count{font-size:14px;}
+  .view-toggle{order:-1;width:100%;}
+  .view-btn{flex:1;text-align:center;}
+
+  /* ── LIST VIEW TABLE — simplify columns on mobile ── */
+  .lv-table{font-size:12px;table-layout:auto !important;}
+  /* Hide less important columns on mobile */
+  .lv-table th:nth-child(3),
+  .lv-table td:nth-child(3),
+  .lv-table th:nth-child(4),
+  .lv-table td:nth-child(4),
+  .lv-table th:nth-child(8),
+  .lv-table td:nth-child(8){display:none;}
+  .lv-table colgroup{display:none;}
+  .lv-table th:nth-child(2){width:40%;}
+  .lv-table th:nth-child(5){width:20%;}
+  .lv-table th:nth-child(6){width:20%;}
+  .lv-table th:nth-child(7){width:15%;}
+
+  /* ── PROGRAMME CARDS ── */
+  .pcard{margin-bottom:12px;}
+  .phead{flex-wrap:wrap;gap:6px;}
+  .pbody{grid-template-columns:1fr 1fr !important;}
+  .pbody .cs:last-child{grid-column:1/-1;border-right:none;}
+
+  /* ── FOCUS CARDS GRID — single column ── */
+  .focus-grid{grid-template-columns:1fr !important;gap:12px;}
+  .focus-card-top{flex-direction:column !important;}
+  .focus-card-top > div:last-child{
+    width:100% !important;
+    height:140px !important;
+    flex-shrink:unset !important;
+  }
+  .pbody{grid-template-columns:1fr 1fr !important;}
+  .cdetail-grid{grid-template-columns:1fr !important;}
+  .cdetail-grid .cs{border-right:none !important;border-bottom:1px solid #f3f4f6;}
+
+  /* ── COUNTRY PAGE CARDS ── */
+  .focus-card .pbody{grid-template-columns:1fr 1fr !important;}
+  .focus-card .pbody .cs:last-child{grid-column:1/-1;}
+
+  /* ── SPOTLIGHT OVERVIEW CARDS ── */
+  .fc-stat-row{flex-direction:column;gap:8px;}
+
+  /* ── EXPANDABLE TABLE ON SPOTLIGHT PAGES ── */
+  .ctable{font-size:11px;}
+  .ctable th:nth-child(4),
+  .ctable td:nth-child(4),
+  .ctable th:nth-child(5),
+  .ctable td:nth-child(5),
+  .ctable th:nth-child(8),
+  .ctable td:nth-child(8){display:none;}
+  .cdetail-grid{grid-template-columns:1fr !important;}
+
+  /* ── CONTENT PAGES (About, Guidance, Data etc) ── */
+  .cp{padding:20px 16px !important;}
+  .cptitle{font-size:24px !important;}
+  .cpgrid{grid-template-columns:1fr !important;}
+  .dscard{padding:12px !important;}
+  .dsgrid{grid-template-columns:1fr !important;}
+
+  .promo-banner{display:none !important;}
+  /* ── GENERAL ── */
+  .search-outer{grid-template-columns:1fr !important;}
+  .ad-col{display:none !important;}
+  .page-footer-contact{font-size:11px;padding:12px 16px;text-align:center;}
+  .infobox{font-size:12px;padding:10px 12px;}
+  .modal{width:calc(100vw - 32px) !important;max-height:90vh;overflow-y:auto;}
+
+  /* ── COMPARISON TRAY ── */
+  .cmp-tray{padding:10px 12px;}
+  .cmp-tray-inner{flex-wrap:wrap;gap:8px;}
+}
+
+/* ── TABLET: 769px - 1024px ── */
+@media(min-width:769px) and (max-width:1024px){
+  .search-layout{grid-template-columns:220px 1fr !important;}
+  .sidebar{padding:14px !important;}
+  .focus-grid{grid-template-columns:1fr 1fr !important;}
+  .hbg > div[style*="grid-template-columns:140px"]{
+    grid-template-columns:120px 1fr 120px !important;
+  }
+  .pbody{grid-template-columns:1fr 1fr !important;}
+  .pbody .cs:last-child{grid-column:1/-1;}
+}
+
 
 /* HERO */
 .hbg{position:relative;overflow:hidden;background:linear-gradient(160deg,#f0fdf8 0%,#fdf2f8 50%,#eff6ff 100%);}
@@ -561,7 +690,7 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
 
 
 <!-- PROMOTIONAL BANNER -->
-<div style="background:linear-gradient(135deg,#003366 0%,#003366 60%,#990000 100%);padding:0;margin:0;overflow:hidden;position:relative;">
+<div class="promo-banner" style="background:linear-gradient(135deg,#003366 0%,#003366 60%,#990000 100%);padding:0;margin:0;overflow:hidden;position:relative;">
   <div style="max-width:1100px;margin:0 auto;display:flex;align-items:stretch;min-height:90px;">
     <div style="padding:14px 24px;display:flex;align-items:center;gap:16px;flex:1;z-index:2;">
       <div style="width:44px;height:44px;background:rgba(255,255,255,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:9px;font-weight:800;color:#fff;flex-shrink:0;border:1px solid rgba(255,255,255,0.25);">UoB</div>
