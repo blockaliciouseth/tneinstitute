@@ -128,6 +128,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
 /* ══════════════════════════════════════
    MOBILE RESPONSIVE — max-width: 768px
 ══════════════════════════════════════ */
+.logo-mobile{display:none;}
+.logo-full{display:block;}
 @media(max-width:768px){
 
   /* ── GLOBAL OVERFLOW FIX ── */
@@ -142,9 +144,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
     gap:4px;
     overflow:hidden;
   }
-  /* Logo - cropped image, fits nav */
+  /* Logo - globe only on mobile */
   .logo{overflow:visible !important;max-width:none !important;flex-shrink:0;}
-  .logo img{height:30px !important;width:auto !important;display:block !important;}
+  .logo-full{display:none !important;}
+  .logo-mobile{display:block !important;height:28px !important;width:auto !important;}
   .nav-links{
     gap:0px;
     overflow-x:auto;
