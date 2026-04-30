@@ -142,9 +142,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
     gap:4px;
     overflow:hidden;
   }
-  /* Crop logo to show globe only - hide text portion */
-  .logo{overflow:hidden;max-width:44px !important;flex-shrink:0;}
-  .logo img{height:44px !important;width:auto;display:block;object-fit:cover;object-position:left center;}
+  /* Logo - full logo visible, scaled down */
+  .logo{overflow:visible !important;max-width:none !important;flex-shrink:0;}
+  .logo img{height:34px !important;width:auto !important;display:block !important;}
   .nav-links{
     gap:0px;
     overflow-x:auto;
