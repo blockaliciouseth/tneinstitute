@@ -38,6 +38,25 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
 .nav-dropdown{position:relative;display:inline-block;}
 .nav-drop-menu{position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--bd);border-radius:10px;min-width:180px;padding:10px 6px 6px;z-index:200;display:none;box-shadow:0 8px 32px rgba(0,0,0,0.12);}
 .nav-dropdown:hover .nav-drop-menu{display:block;}
+.nav-drop-menu.open{display:block !important;}
+/* Hamburger */
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;}
+.nav-hamburger span{display:block;width:22px;height:2px;background:#1a1d2e;border-radius:2px;transition:all 0.2s;}
+/* Mobile nav overlay */
+.mobile-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:299;}
+.mobile-nav-overlay.open{display:block;}
+.mobile-nav-drawer{position:fixed;top:0;right:-280px;width:260px;height:100vh;background:#fff;z-index:300;padding:20px 0;overflow-y:auto;transition:right 0.25s ease;box-shadow:-4px 0 24px rgba(0,0,0,0.15);}
+.mobile-nav-drawer.open{right:0;}
+.mobile-nav-close{position:absolute;top:12px;right:12px;background:none;border:none;font-size:20px;cursor:pointer;color:#6b7280;}
+.mobile-nav-item{display:block;width:100%;text-align:left;padding:12px 20px;background:none;border:none;font-size:14px;font-weight:600;color:#1a1d2e;cursor:pointer;border-bottom:1px solid #f3f4f6;}
+.mobile-nav-item:hover{background:#f9fafb;}
+.mobile-nav-section{font-size:10px;color:#9ca3af;padding:10px 20px 4px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.mobile-nav-sub{display:block;width:100%;text-align:left;padding:10px 28px;background:none;border:none;font-size:13px;color:#374151;cursor:pointer;border-bottom:1px solid #f9fafb;}
+.mobile-nav-sub:hover{background:#f9fafb;}
+@media(max-width:768px){
+  .nav-links{display:none !important;}
+  .nav-hamburger{display:flex !important;}
+}
 .nav-drop-menu button{display:block;width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:var(--mt2);font-size:13px;font-family:"Inter",sans-serif;cursor:pointer;border-radius:7px;transition:all 0.15s;font-weight:500;}
 .nav-drop-menu button:hover{background:var(--acg);color:var(--ac);}
 .page{display:none !important;}.page.active{display:block !important;}
@@ -825,9 +844,49 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
 
   </div>
   <div style="display:flex;gap:6px;align-items:center">
-    
+    <button class="nav-hamburger" id="nav-ham" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav-overlay" id="mob-overlay" onclick="closeMobileNav()"></div>
+<div class="mobile-nav-drawer" id="mob-drawer">
+  <button class="mobile-nav-close" onclick="closeMobileNav()">✕</button>
+  <div style="padding:16px 20px 12px;border-bottom:1px solid #f3f4f6;">
+    <div style="font-weight:800;font-size:14px;color:#1a1d2e;">TNE Institute</div>
+    <div style="font-size:11px;color:#9ca3af;">Branch Campus Finder</div>
+  </div>
+  <button class="mobile-nav-item" onclick="mobileNav('search')">🔍 Search</button>
+  <div class="mobile-nav-section">Spotlights</div>
+  <button class="mobile-nav-sub" onclick="mobileNav('focus')">Overview</button>
+  <div class="mobile-nav-section">Featured Regions</div>
+  <button class="mobile-nav-sub" onclick="mobileNav('india')">🇮🇳 India</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('singapore')">🇸🇬 Singapore</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('malaysia')">🇲🇾 Malaysia</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('gcc')">🌙 GCC / Gulf</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('egypt')">🇪🇬 Egypt</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('vietnam')">🇻🇳 Vietnam</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('indonesia')">🇮🇩 Indonesia</button>
+  <div class="mobile-nav-section">More Regions</div>
+  <button class="mobile-nav-sub" onclick="mobileNav('australia')">🇦🇺 Australia</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('kazakhstan')">🇰🇿 Kazakhstan</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('greece')">🇬🇷 Greece</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('france')">🇫🇷 France</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('malta')">🇲🇹 Malta</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('poland')">🇵🇱 Poland</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('russia')">🇷🇺 Russia</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('china')">🇨🇳 China</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('canada')">🇨🇦 Canada</button>
+  <div class="mobile-nav-section">About</div>
+  <button class="mobile-nav-sub" onclick="mobileNav('about')">About TNE Institute</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('tne')">What is TNE?</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('data')">Data Sources</button>
+  <div class="mobile-nav-section">Services</div>
+  <button class="mobile-nav-sub" onclick="mobileNav('guidance')">Expert Guidance</button>
+  <button class="mobile-nav-sub" onclick="mobileNav('services')">Work With Us</button>
+</div>
 
 <!-- ══════════════════════════════════════
      SEARCH PAGE
@@ -1135,14 +1194,7 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
   </div><!-- end results-area -->
 </div><!-- end search-layout --></div><!-- end search-outer -->
 
-  <div style="max-width:1100px;margin:24px auto 0;padding:0 20px;text-align:center;font-size:11px;color:#9ca3af;">
-    Data source: Campus data from C-BERT International Campus Database and official university websites. Fees are approximate GBP. Always verify directly with institutions before applying.
-  </div>
-  <div class="page-footer-contact">
-    Contact us: <a href="mailto:mark@tneinstitute.org">mark@tneinstitute.org</a> &nbsp;·&nbsp;
-    <a href="https://www.linkedin.com/company/tne-institute/" target="_blank">LinkedIn: TNE Institute</a>
-  </div>
-</div>
+
 
 <div id="page-focus" class="page">
 <div class="cp" style="max-width:1100px;">
@@ -1247,13 +1299,6 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
   <div class="infobox">Want your institution featured?</strong> TNE Institute showcases TNE campuses that offer genuine quality and value. <span style="color:var(--ac);cursor:pointer" onclick="window.open('mailto:mark@tneinstitute.org')">Contact us</span> to discuss a featured listing.</div>
 
 
-  <div style="max-width:1100px;margin:24px auto 0;padding:0 20px;text-align:center;font-size:11px;color:#9ca3af;">
-    Data source: Campus data from C-BERT International Campus Database and official university websites. Fees are approximate GBP. Always verify directly with institutions before applying.
-  </div>
-  <div class="page-footer-contact">
-    Contact us: <a href="mailto:mark@tneinstitute.org">mark@tneinstitute.org</a> &nbsp;·&nbsp;
-    <a href="https://www.linkedin.com/company/tne-institute/" target="_blank">LinkedIn: TNE Institute</a>
-  </div>
 </div>
 </div>
 
@@ -1395,6 +1440,20 @@ input[type=range].price-slider::-moz-range-thumb{width:20px;height:20px;border-r
 <div class="movl" id="dmodal"><div class="modal" id="mbody"></div></div>
 <div class="toast" id="toast"></div>
 
+<script>
+function toggleMobileNav(){
+  document.getElementById('mob-drawer').classList.toggle('open');
+  document.getElementById('mob-overlay').classList.toggle('open');
+}
+function closeMobileNav(){
+  document.getElementById('mob-drawer').classList.remove('open');
+  document.getElementById('mob-overlay').classList.remove('open');
+}
+function mobileNav(page){
+  closeMobileNav();
+  showPage(page);
+}
+</script>
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const MUR=46.5;
 const USD_GBP=0.79; // approx rate - update periodically
@@ -2699,13 +2758,6 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
       <button onclick="toast2('Enquiry received. Our team will be in touch within 2 working days.');this.textContent='Sent';" style="width:100%;padding:11px;background:var(--ac);border:none;border-radius:var(--rs);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;">Send Enquiry →</button>
     </div>
   </div>
-  <div style="max-width:1100px;margin:24px auto 0;padding:0 20px;text-align:center;font-size:11px;color:#9ca3af;">
-    Data source: Campus data from C-BERT International Campus Database and official university websites. Fees are approximate GBP. Always verify directly with institutions before applying.
-  </div>
-  <div class="page-footer-contact">
-    Contact us: <a href="mailto:mark@tneinstitute.org">mark@tneinstitute.org</a> &nbsp;·&nbsp;
-    <a href="https://www.linkedin.com/company/tne-institute/" target="_blank">LinkedIn: TNE Institute</a>
-  </div>
 </div>
 </div>
 
@@ -2781,13 +2833,6 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
       <button onclick="showPage('services')" style="padding:10px 24px;background:var(--s3);border:1px solid var(--bd2);border-radius:var(--rs);color:var(--ac);font-size:13px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;">Enquire about a Spotlight →</button>
     </div>
 
-  </div>
-  <div style="max-width:1100px;margin:24px auto 0;padding:0 20px;text-align:center;font-size:11px;color:#9ca3af;">
-    Data source: Campus data from C-BERT International Campus Database and official university websites. Fees are approximate GBP. Always verify directly with institutions before applying.
-  </div>
-  <div class="page-footer-contact">
-    Contact us: <a href="mailto:mark@tneinstitute.org">mark@tneinstitute.org</a> &nbsp;·&nbsp;
-    <a href="https://www.linkedin.com/company/tne-institute/" target="_blank">LinkedIn: TNE Institute</a>
   </div>
 </div>
 </div>
@@ -7944,7 +7989,11 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
       <div class="inst-hero-name">University of Birmingham Dubai</div>
       <div class="inst-hero-loc">📍 Dubai International Academic City, Dubai, UAE</div>
       <div class="inst-hero-stats">
-        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#80</div><div class="inst-hero-stat-lbl">QS World Rank</div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#80</div><div class="inst-hero-stat-lbl">QS World Rank</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">4,000+</div><div class="inst-hero-stat-lbl">Students</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">150+</div><div class="inst-hero-stat-lbl">Nationalities</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">2018</div><div class="inst-hero-stat-lbl">Established</div></div>
+      </div>
     </div>
   </div>
 
@@ -8032,7 +8081,6 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
 
 </div>
 </div>
-
 <div id="page-inst-heriot-watt-dubai" class="page">
 <div class="cp" style="max-width:1100px;padding-bottom:8px;">
   <button onclick="history.back()" style="background:none;border:none;color:var(--ac);font-size:13px;font-weight:600;cursor:pointer;padding:0;margin-bottom:12px;">← Back</button>
@@ -8047,7 +8095,11 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
       <div class="inst-hero-name">Heriot-Watt University Dubai</div>
       <div class="inst-hero-loc">📍 Dubai Knowledge Park, Dubai, UAE</div>
       <div class="inst-hero-stats">
-        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#287</div><div class="inst-hero-stat-lbl">QS World Rank</div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#287</div><div class="inst-hero-stat-lbl">QS World Rank</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">5,000+</div><div class="inst-hero-stat-lbl">Students</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">125+</div><div class="inst-hero-stat-lbl">Nationalities</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">2005</div><div class="inst-hero-stat-lbl">Established</div></div>
+      </div>
     </div>
   </div>
 
@@ -8135,7 +8187,6 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
 
 </div>
 </div>
-
 <div id="page-inst-middlesex-dubai" class="page">
 <div class="cp" style="max-width:1100px;padding-bottom:8px;">
   <button onclick="history.back()" style="background:none;border:none;color:var(--ac);font-size:13px;font-weight:600;cursor:pointer;padding:0;margin-bottom:12px;">← Back</button>
@@ -8150,7 +8201,11 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
       <div class="inst-hero-name">Middlesex University Dubai</div>
       <div class="inst-hero-loc">📍 Dubai Knowledge Park & DIAC, Dubai, UAE</div>
       <div class="inst-hero-stats">
-        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#669</div><div class="inst-hero-stat-lbl">QS World Rank</div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#669</div><div class="inst-hero-stat-lbl">QS World Rank</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">5,600+</div><div class="inst-hero-stat-lbl">Students</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">120+</div><div class="inst-hero-stat-lbl">Nationalities</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">2005</div><div class="inst-hero-stat-lbl">Established</div></div>
+      </div>
     </div>
   </div>
 
@@ -8238,7 +8293,6 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
 
 </div>
 </div>
-
 <div id="page-inst-southampton-delhi" class="page">
 <div class="cp" style="max-width:1100px;padding-bottom:8px;">
   <button onclick="history.back()" style="background:none;border:none;color:var(--ac);font-size:13px;font-weight:600;cursor:pointer;padding:0;margin-bottom:12px;">← Back</button>
@@ -8253,7 +8307,11 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
       <div class="inst-hero-name">University of Southampton Delhi</div>
       <div class="inst-hero-loc">📍 International Tech Park Gurgaon, Sector 59, Gurugram, India</div>
       <div class="inst-hero-stats">
-        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#81</div><div class="inst-hero-stat-lbl">QS World Rank</div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#81</div><div class="inst-hero-stat-lbl">QS World Rank</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">170</div><div class="inst-hero-stat-lbl">Students</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">Founding cohort</div><div class="inst-hero-stat-lbl">Nationalities</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">2025</div><div class="inst-hero-stat-lbl">Established</div></div>
+      </div>
     </div>
   </div>
 
@@ -8341,7 +8399,6 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
 
 </div>
 </div>
-
 <div id="page-inst-nottingham-malaysia" class="page">
 <div class="cp" style="max-width:1100px;padding-bottom:8px;">
   <button onclick="history.back()" style="background:none;border:none;color:var(--ac);font-size:13px;font-weight:600;cursor:pointer;padding:0;margin-bottom:12px;">← Back</button>
@@ -8356,7 +8413,11 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
       <div class="inst-hero-name">University of Nottingham Malaysia</div>
       <div class="inst-hero-loc">📍 Semenyih, Selangor, Malaysia</div>
       <div class="inst-hero-stats">
-        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#97</div><div class="inst-hero-stat-lbl">QS World Rank</div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#97</div><div class="inst-hero-stat-lbl">QS World Rank</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">5,000+</div><div class="inst-hero-stat-lbl">Students</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">75+</div><div class="inst-hero-stat-lbl">Nationalities</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">2000</div><div class="inst-hero-stat-lbl">Established</div></div>
+      </div>
     </div>
   </div>
 
@@ -8444,7 +8505,6 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
 
 </div>
 </div>
-
 <div id="page-inst-heriot-watt-malaysia" class="page">
 <div class="cp" style="max-width:1100px;padding-bottom:8px;">
   <button onclick="history.back()" style="background:none;border:none;color:var(--ac);font-size:13px;font-weight:600;cursor:pointer;padding:0;margin-bottom:12px;">← Back</button>
@@ -8459,7 +8519,11 @@ window.addEventListener("load",()=>{initData();injectSpotlightComparisons();if(w
       <div class="inst-hero-name">Heriot-Watt University Malaysia</div>
       <div class="inst-hero-loc">📍 Putrajaya, Malaysia</div>
       <div class="inst-hero-stats">
-        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#287</div><div class="inst-hero-stat-lbl">QS World Rank</div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">#287</div><div class="inst-hero-stat-lbl">QS World Rank</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">3,000+</div><div class="inst-hero-stat-lbl">Students</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">40+</div><div class="inst-hero-stat-lbl">Nationalities</div></div>
+        <div class="inst-hero-stat"><div class="inst-hero-stat-val">2014</div><div class="inst-hero-stat-lbl">Established</div></div>
+      </div>
     </div>
   </div>
 
