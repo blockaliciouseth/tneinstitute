@@ -296,11 +296,42 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-hei
   .cs{padding:8px !important;}
 
   /* ── FOCUS CARDS ── */
-  .focus-grid{grid-template-columns:1fr !important;gap:10px;}
-  .focus-card-top{flex-direction:column !important;}
-  .focus-card-top > div:last-child{width:100% !important;height:120px !important;}
-  .focus-card .pbody{grid-template-columns:1fr 1fr !important;}
-  .focus-card .pbody .cs:last-child{grid-column:1/-1;}
+
+  /* 1. Single column — one card per row */
+  .focus-grid{grid-template-columns:1fr !important;gap:12px;}
+
+  /* 2. Card top: image on right, text on left — keep side by side */
+  .focus-card-top{flex-direction:row !important;}
+  .focus-card-top > div:first-child{flex:1;min-width:0;padding:12px 10px 10px !important;}
+  .focus-card-top > div:last-child{width:38% !important;flex-shrink:0;height:160px !important;min-height:160px;}
+
+  /* 3. Card header text sizing */
+  .fc-uni{font-size:13px !important;margin-bottom:4px !important;}
+  .fc-loc{font-size:11px !important;}
+  .fc-badges{gap:4px !important;margin-bottom:8px !important;}
+  .fc-badge{font-size:9px !important;padding:2px 6px !important;}
+
+  /* 4. Stats row — compact 3-across */
+  .pbody{display:grid !important;grid-template-columns:1fr 1fr 1fr !important;gap:4px !important;width:100% !important;padding:8px 10px !important;}
+  .pbody .cs:last-child{grid-column:unset !important;}
+  .cs{padding:6px 6px !important;}
+  .ctot{font-size:13px !important;font-weight:800 !important;}
+  .cdetail{font-size:9px !important;}
+  .cqs-num{font-size:17px !important;}
+  .cqs-label{font-size:9px !important;}
+  .csave{font-size:9px !important;padding:4px 6px !important;line-height:1.3 !important;}
+
+  /* 5. Programme pills — compact, no wrapping issues */
+  .fc-progs{display:flex;flex-direction:column;gap:4px;margin:6px 10px 4px !important;}
+  .fc-prog{font-size:11px !important;padding:6px 8px !important;border-radius:6px !important;}
+  .fc-prog-name{font-size:11px !important;}
+  .fc-prog-fee{font-size:10px !important;white-space:nowrap;flex-shrink:0;}
+
+  /* 6. Notes and actions */
+  .pftr{padding:6px 10px 8px !important;}
+  .pfnote{font-size:10px !important;color:#9ca3af;line-height:1.4 !important;}
+  .fc-actions{display:flex;gap:6px;padding:0 10px 10px !important;}
+  .cbtn{font-size:11px !important;padding:7px 10px !important;}
 
   /* ── CONTENT PAGES ── */
   .cp{padding:16px 14px !important;width:100% !important;}
